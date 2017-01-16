@@ -125,7 +125,7 @@ Given a list of `GPUs` (see `GPUstats.getGPUs()`), return a equally sized list o
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
 * Outputs
-  * GPUavailability - binary list indicating if `GPUs` are available or not. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The order and limit are fixed to `'first'` and `1`, respectively.
+  * GPUavailability - binary list indicating if `GPUs` are available or not. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively.
 
 
 See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py) for examples and more details.
