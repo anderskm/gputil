@@ -30,7 +30,7 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
       gedit ~/.bashrc
       ```
 
-  3. Added your GPUstats folder to PYTHONPATH (replace <path_to_gpustats> with your folder path):
+  3. Added your GPUstats folder to PYTHONPATH (replace \<path_to_gpustats\> with your folder path):
 
       ```
       export PYTHONPATH="$PYTHONPATH:<path_to_gpustats>"
