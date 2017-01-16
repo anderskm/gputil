@@ -22,7 +22,7 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
 ## Installation
 1. Download or clone repository to your computer
-2. Add folder to ~/.bashrc
+2. Add GPUstats folder to ~/.bashrc
   1. Open a new terminal (Press Ctrl+Alt+T)
   2. Open bashrc:
 
@@ -41,6 +41,23 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
   4. Save ~/.bashrc and close gedit
   5. Restart your terminal
+1. Test the installation
+  1. Open a terminal in a folder other than the GPUstats folder
+  2. Start a python console by typing `python` in the terminal
+  3. In the newly opened python console, type:
+
+    ```
+    import GPUstats
+    GPUstats.showUtilization()
+    ```
+
+  4. Your output should look something like following, depending on your number of GPUs and their current usage:
+
+    ```
+     ID  GPU  MEM
+    --------------
+      0    0%   0%
+    ```
 
 ## Usage
 See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py)
