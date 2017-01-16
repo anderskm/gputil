@@ -9,6 +9,8 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 1. [Requirements](#requirements)
 1. [Installation](#installation)
 1. [Usage](#usage)
+  1. [Main functions](#main-functions)
+  1. [Helper functions](#helper-functions)
 1. [Examples](#examples)
   1. [Select first available GPU in Caffe](#select-first-available-gpu-in-caffe)
   1. [Occupy only 1 GPU in TensorFlow](#occupy-only-1-gpu-in-tensorflow)
