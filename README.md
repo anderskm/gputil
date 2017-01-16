@@ -60,7 +60,6 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
     ```
 
 ## Usage
-See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py)
 
 ```python
 GPUs = GPUstats.getGPUs()
@@ -82,7 +81,7 @@ deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
 GPUstats.showUtilization()
 ```
 
-(Work in progress)
+See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py) for examples and more details
 
 ## Examples
 
