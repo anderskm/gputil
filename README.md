@@ -87,7 +87,9 @@ Returns a list ids of available GPUs. Availablity is determined based on current
 ```python
 deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
 ```
-Returns a list with 0 or 1 ids of the first available GPU. Lower ordered ids are prioritized over higher order ids. Availablity is determined based on current memory usage and load.
+Returns a list with 0 or 1 ids of the first available GPU. Lower ordered ids are prioritized over higher order ids.
+Availablity is determined based on current memory usage and load.
+Same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
 
 * Inputs
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
@@ -95,23 +97,21 @@ Returns a list with 0 or 1 ids of the first available GPU. Lower ordered ids are
 * Outputs
   * deviceID - list with 1 element containing the first available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The order and limit are fixed to `'first'` and `1`, respectively.
 
-Same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
-
 
 ```python
 GPUstats.showUtilization()
 ```
 Prints the current status (id, memory usage and load) of all GPUs
 * Inputs
-  * None
+  * _None_
 * Outputs
-  * None
+  * _None_
 
 ```python
 GPUs = GPUstats.getGPUs()
 ```
 * Inputs
-  * None
+  * _None_
 * Outputs
   * `GPUs` - list of all GPUs. Each `GPU` corresponds to one GPU in the computer and contains a device id, relative load and relative memory usage.
 
@@ -121,7 +121,7 @@ GPUavailability = GPUstats.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
 Given a list of `GPUs` (see `GPUstats.getGPUs()`), return a equally sized list of ones and zeroes indicating which corresponding GPUs are available.
 
 * Inputs
-  * `GPUs` - List of `GPUs`. See `GPUstats.getGPUs()`
+  * `GPUs` - List of `GPUs`. See `GPUstats.getGPUs()
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
 * Outputs
