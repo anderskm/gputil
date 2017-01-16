@@ -1,4 +1,4 @@
-from subprocess import Popen, PIPE, STDOUT, check_output
+from subprocess import Popen, PIPE, STDOUT
 import numpy as np
 import random
 
