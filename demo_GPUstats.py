@@ -1,4 +1,5 @@
 import GPUstats
+import numpy as np
 
 # Get all device ids and their processing and memory utiliazion
 #(deviceIds, gpuUtil, memUtil) = GPUstats.getGPUs()
@@ -31,7 +32,7 @@ print(firstGPU)
 # Show the utilization of all GPUs in a nice table
 GPUstats.showUtilization()
 
-print(GPUstats.getAvailable(order = 'first'))
+print(GPUstats.getAvailable(order = 'first', limit=999))
 
 print(GPUstats.getAvailable(order = 'last'))
 
@@ -39,4 +40,4 @@ print(GPUstats.getAvailable(order = 'random'))
 
 print(GPUstats.getAvailable(order = 'load'))
 
-print(GPUstats.getAvailable(order = 'memory', limit = 2, maxLoad=0))
+print(GPUstats.getAvailable(order = 'memory', limit = 999, maxLoad=0))

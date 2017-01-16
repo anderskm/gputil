@@ -1,4 +1,4 @@
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT, check_output
 import numpy as np
 import random
 
@@ -12,11 +12,14 @@ def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
     p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,utilization.memory","--format=csv,noheader,nounits"],stdout=PIPE)
     output = str(p.stdout.read())
-
+    output = output[2:-1] # Remove b' and ' from string added by python
+    # print(output)
     ## Parse output
     # Split on line break
-    lines = output.split('\n')
+    lines = output.split('\\n')
+    # print(lines)
     numDevices = len(lines)-1
+    #print(numDevices)
     deviceIds = np.empty(numDevices,dtype=int)
     gpuUtil = np.empty(numDevices,dtype=float)
     memUtil = np.empty(numDevices,dtype=float)
