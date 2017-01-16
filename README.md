@@ -90,8 +90,9 @@ See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPU
 ## Examples
 
 ### Occupy only 1 GPU in TensorFlow
-By default, TensorFlow will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`). By setting the environment variable `CUDA_VISIBLE_DEVICES`, the GPUs can be hidden from TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmatically based on the available GPUs.
-Below is a minimum working example of how to only occupy 1 GPU in TensorFlow using GPUstats.
+By default, [TensorFlow](https://www.tensorflow.org/)  will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`).
+By setting the environment variable `CUDA_VISIBLE_DEVICES`, the user can mask which GPUs should be visible to TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmatically based on the available GPUs.
+Below is a minimum working example of how to occupy only 1 GPU in TensorFlow using GPUstats.
 To run the code, copy it into a new python file (e.g. `demo_tensorflow_gpustats.py`) and run it (e.g. enter `python demo_tensorflow_gpustats.py` in a terminal).
 
 ```python
@@ -107,14 +108,16 @@ DEVICE_ID = DEVICE_ID_LIST[0] # grab first element from list
 # Set CUDA_VISIBLE_DEVICES to first available device id
 os.environ["CUDA_VISIBLE_DEVICES"] = str(DEVICE_ID)
 
-# Set
+# Store and print the device name
 device = '/gpu:' + str(DEVICE_ID)
 print('Device: ' + device)
 
 # Run a minimum working example on the selected GPU
+# Start a session
 with tf.Session() as sess:
+    # Select the device
     with tf.device(device):
-        # Declare two numbers and add them together
+        # Declare two numbers and add them together in TensorFlow
         a = tf.constant(12)
         b = tf.constant(30)
         result = sess.run(a+b)
