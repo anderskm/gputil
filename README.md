@@ -46,7 +46,7 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
   2. Start a python console by typing `python` in the terminal
   3. In the newly opened python console, type:
 
-    ```
+    ```python
     import GPUstats
     GPUstats.showUtilization()
     ```
@@ -62,23 +62,23 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 ## Usage
 See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py)
 
-```
+```python
 GPUs = GPUstats.getGPUs()
 ```
 
-```
+```python
 deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
 ```
 
-```
+```python
 GPUavailability = GPUstats.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
 ```
 
-```
+```python
 deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
 ```
 
-```
+```python
 GPUstats.showUtilization()
 ```
 
