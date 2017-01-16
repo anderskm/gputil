@@ -30,7 +30,7 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
       gedit ~/.bashrc
       ```
 
-  3. Added your GPUstats folder to PYTHONPATH (replace \<path_to_gpustats\> with your folder path):
+  3. Added your GPUstats folder to the environment variable `PYTHONPATH` (replace `<path_to_gpustats>` with your folder path):
 
       ```
       export PYTHONPATH="$PYTHONPATH:<path_to_gpustats>"
@@ -91,7 +91,7 @@ Below is a minimum working example of how to only occupy 1 GPU in TensorFlow usi
 To run the code, copy it into a new python file (e.g. `demo_tensorflow_gpustats.py`) and run it (e.g. enter `python demo_tensorflow_gpustats.py` in a terminal).
 
 ```python
-# Import os to set the environmental variable CUDA_VISIBLE_DEVICES
+# Import os to set the environment variable CUDA_VISIBLE_DEVICES
 import os
 import tensorflow as tf
 import GPUstats
