@@ -31,7 +31,29 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
 ## Usage
 See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py)
 
+```
+GPUs = GPUstats.getGPUs()
+```
+
+```
+deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
+```
+
+```
+GPUavailability = GPUstats.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
+```
+
+```
+deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
+```
+
+```
+GPUstats.showUtilization()
+```
+
 (Work in progress)
+
+## Examples
 
 ### Occupy only a single GPU in TensorFlow
 By default, TensorFlow will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`). By setting the environment variable `CUDA_VISIBLE_DEVICES`, the GPUs can be hidden from TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmically based on the available GPUs.
