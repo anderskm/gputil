@@ -9,7 +9,8 @@ Availablity is based opun the current memory consumption and load of each GPU.
 1. [Installation](#installation)
 1. [Usage](#usage)
 1. [Examples](#examples)
-  1. [Occupy only a single GPU in TensorFlow](#Occupy only a single GPU in TensorFlow)
+  1. [Occupy only 1 GPU in TensorFlow](#occupy-only-1-gpu-in-tensorflow)
+  1. [Select a random available GPU in Caffe](#select-a-random-available-gpu-in-caffe)
 1. [License](#license)
 
 ## Requirements
@@ -88,7 +89,7 @@ See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPU
 
 ## Examples
 
-### Occupy only a single GPU in TensorFlow
+### Occupy only 1 GPU in TensorFlow
 By default, TensorFlow will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`). By setting the environment variable `CUDA_VISIBLE_DEVICES`, the GPUs can be hidden from TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmatically based on the available GPUs.
 Below is a minimum working example of how to only occupy 1 GPU in TensorFlow using GPUstats.
 To run the code, copy it into a new python file (e.g. `demo_tensorflow_gpustats.py`) and run it (e.g. enter `python demo_tensorflow_gpustats.py` in a terminal).
@@ -197,6 +198,10 @@ I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow devi
 I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:3) -> (device: 3, name: TITAN X (Pascal), pci bus id: 0000:84:00.0)
 a+b=42
 ```
+
+### Select a random available GPU in Caffe
+
+
 
 ## License
 See [LICENSE](https://github.com/anderskm/gpustats/blob/master/LICENSE)
