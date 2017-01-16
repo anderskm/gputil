@@ -44,6 +44,7 @@ import GPUstats
 
 # Get the first available GPU
 DEVICE_ID = GPUstats.getFirstAvailable()
+DEVICE_ID = DEVICE_ID[0] # grab first element from list
 
 # Set CUDA_VISIBLE_DEVICES to first available device id
 os.environ["CUDA_VISIBLE_DEVICES"] = str(DEVICE_ID)
@@ -52,7 +53,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = str(DEVICE_ID)
 device = '/gpu:' + str(DEVICE_ID)
 print('Device: ' + device)
 
-with tf.session() as sess:
+with tf.Session() as sess:
     with tf.device(device):
         a = tf.constant(12)
         b = tf.constant(30)
