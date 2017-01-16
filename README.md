@@ -2,6 +2,8 @@
 A Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
 `GPUstats` locates all GPUs on the computer, determines their availablity and returns a ordered list of available GPUs.
 Availablity is based opun the current memory consumption and load of each GPU.
+The module is written for selecting available GPUs for training of Deep Neural Network in Deep Learning.
+However, it is task/library specific and can be applied to any task, where it may be useful to identify available GPUs.
 
 **Table of Contents**
 
@@ -88,6 +90,32 @@ GPUstats.showUtilization()
 See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py) for examples and more details
 
 ## Examples
+
+
+### Select a random available GPU in Caffe
+In the Deep Learning library [Caffe](http://caffe.berkeleyvision.org/), the user can switch between using the CPU or GPU through their Python interface.
+This is done by calling the methods `caffe.set_mode_cpu()` and `caffe.set_mode_gpu()`, respectively.
+Below is a minimum working example for selecting the first available GPU with GPUstats to run a Caffe network.
+
+```
+# Import caffe and GPUstats
+import caffe
+import GPUstats
+
+# Get the first available GPU
+DEVICE_ID_LIST = GPUstats.getFirstAvailable()
+DEVICE_ID = DEVICE_ID_LIST[0] # grab first element from list
+
+# Select GPU mode
+caffe.set_mode_gpu()
+# Select GPU id
+caffe.set_device(DEVICE_ID)
+
+# Initialize your network here
+
+```
+**Note:** At the time of writing this example, the Caffe Python wrapper only supports 1 GPU, although the underlying code supports multiple GPUs.
+Calling directly Caffe from the terminal allows for using multiple GPUs.
 
 ### Occupy only 1 GPU in TensorFlow
 By default, [TensorFlow](https://www.tensorflow.org/)  will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`).
@@ -201,10 +229,6 @@ I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow devi
 I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:3) -> (device: 3, name: TITAN X (Pascal), pci bus id: 0000:84:00.0)
 a+b=42
 ```
-
-### Select a random available GPU in Caffe
-
-
 
 ## License
 See [LICENSE](https://github.com/anderskm/gpustats/blob/master/LICENSE)
