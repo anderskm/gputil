@@ -96,7 +96,7 @@ In the Deep Learning library [Caffe](http://caffe.berkeleyvision.org/), the user
 This is done by calling the methods `caffe.set_mode_cpu()` and `caffe.set_mode_gpu()`, respectively.
 Below is a minimum working example for selecting the first available GPU with GPUstats to run a Caffe network.
 
-```
+```python
 # Import caffe and GPUstats
 import caffe
 import GPUstats
@@ -113,6 +113,7 @@ caffe.set_device(DEVICE_ID)
 # Initialize your network here
 
 ```
+
 **Note:** At the time of writing this example, the Caffe Python wrapper only supports 1 GPU, although the underlying code supports multiple GPUs.
 Calling directly Caffe from the terminal allows for using multiple GPUs.
 
