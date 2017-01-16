@@ -19,7 +19,10 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
   3. Added your GPUstats folder to PYTHONPATH (replace <path_to_gpustats> with your folder path):
 
       ```
-      export PYTHONPATH="$PYTHONPATH:<path_to_gpustats>/gpustats"
+      export PYTHONPATH="$PYTHONPATH:<path_to_gpustats>"
+
+      Example:
+      export PYTHONPATH="$PYTHONPATH:/home/anderskm/github/gpustats"
       ```
 
   4. Save ~/.bashrc and close gedit
