@@ -1,7 +1,7 @@
 # GPUstats
 A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi programmically in Python.
 
-**Table of Content**
+**Table of Contents**
 1. [Installation](#installation)
 2. [Usage](#usage)
 
