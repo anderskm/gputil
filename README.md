@@ -67,6 +67,41 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 ## Usage
 
 ```python
+deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
+```
+* Inputs
+  * `order` - Deterimes the order in which the available GPU device ids are returned. `order` should be specified as one of the following strings:
+    * `'first'` - orders available GPU device ids by ascending id (**defaut**)
+    * `'last'` - orders available GPU device ids by descending id
+    * `'random'` - orders the available GPU device ids randomly
+    * `'load'`- orders the available GPU device ids by ascending load
+    * `'memory'` - orders the available GPU device ids by ascending memory usage
+  * `limit` - limits the number of GPU device ids returned to the specified number. Must be positive integer. (**default = 1**)
+  * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
+  * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
+* Outputs
+  * deviceIDs - list of all available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The list is ordered according to `order`. The maximum number of returned device ids is limted by `limit`.
+
+```python
+deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
+```
+* Inputs
+  * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
+  * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
+* Outputs
+  * deviceID - list with 1 element containing the first available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The order and limit are fixed to `'first'` and `1`, respectively.
+Same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
+
+
+```python
+GPUstats.showUtilization()
+```
+* Inputs
+  * None
+* Outputs
+  * None
+
+```python
 GPUs = GPUstats.getGPUs()
 ```
 * Inputs
@@ -75,30 +110,7 @@ GPUs = GPUstats.getGPUs()
   * GPUs - list of all GPU elements. Each GPU corresponds to one GPU in the computer and contains a device id, relative load and relative memory usage.
 
 ```python
-deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
-```
-* Inputs
-  * `order` - Deterimes the order in which the available GPU device ids are returned. `order` should be specified as one of the following strings:
-    * `'first'` - orders available GPU device ids by ascending id (**defaut**)
-    * `'last'` - orders available GPU device ids by descending id
-    * `'random'` - orders the available GPU device ids randomly
-  * `limit` - limits the number of GPU device ids returned to the specified number. Must be positive integer. (**default = 1**)
-  * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
-  * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
-* Outputs
-  * deviceIDs - list of all available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The list is ordered according to `order`. The maximum number of returned device ids is limted by `limit`.
-
-
-```python
 GPUavailability = GPUstats.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
-```
-
-```python
-deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
-```
-
-```python
-GPUstats.showUtilization()
 ```
 
 See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py) for examples and more details
