@@ -174,7 +174,9 @@ I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow devi
 a+b=42
 
 ```
-Comment the `os.environ["CUDA_VISIBLE_DEVICES"] = str(DEVICE_ID)` line and compare the output. you output should look something like code block below. Notice, how all 4 GPUs are being found and created as a tensorflow device.
+Comment the `os.environ["CUDA_VISIBLE_DEVICES"] = str(DEVICE_ID)` line and compare the two outputs.
+Depending on your number of GPUs, your output should look something like code block below.
+Notice, how all 4 GPUs are being found and created as a tensorflow device, whereas when `CUDA_VISIBLE_DEVICES` was set, only 1 GPU was found and created.
 
 ```
 I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library libcublas.so locally
