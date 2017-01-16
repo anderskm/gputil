@@ -69,6 +69,8 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 ```python
 deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
 ```
+Returns a list ids of available GPUs. Availablity is determined based on current memory usage and load. The order, maximum number of devices, their maximum load and maximum memory consumption are determined by the input arguments.
+
 * Inputs
   * `order` - Deterimes the order in which the available GPU device ids are returned. `order` should be specified as one of the following strings:
     * `'first'` - orders available GPU device ids by ascending id (**defaut**)
@@ -85,17 +87,21 @@ deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, max
 ```python
 deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
 ```
+Returns a list with 0 or 1 ids of the first available GPU. Lower ordered ids are prioritized over higher order ids. Availablity is determined based on current memory usage and load.
+
 * Inputs
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
 * Outputs
   * deviceID - list with 1 element containing the first available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The order and limit are fixed to `'first'` and `1`, respectively.
+
 Same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
 
 
 ```python
 GPUstats.showUtilization()
 ```
+Prints the current status (id, memory usage and load) of all GPUs
 * Inputs
   * None
 * Outputs
@@ -107,13 +113,22 @@ GPUs = GPUstats.getGPUs()
 * Inputs
   * None
 * Outputs
-  * GPUs - list of all GPU elements. Each GPU corresponds to one GPU in the computer and contains a device id, relative load and relative memory usage.
+  * `GPUs` - list of all GPUs. Each `GPU` corresponds to one GPU in the computer and contains a device id, relative load and relative memory usage.
 
 ```python
 GPUavailability = GPUstats.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
 ```
+Given a list of `GPUs` (see `GPUstats.getGPUs()`), return a equally sized list of ones and zeroes indicating which corresponding GPUs are available.
 
-See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py) for examples and more details
+* Inputs
+  * `GPUs` - List of `GPUs`. See `GPUstats.getGPUs()`
+  * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
+  * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
+* Outputs
+  * GPUavailability - binary list indicating if `GPUs` are available or not. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The order and limit are fixed to `'first'` and `1`, respectively.
+
+
+See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py) for examples and more details.
 
 ## Examples
 
