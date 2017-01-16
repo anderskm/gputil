@@ -1,6 +1,9 @@
 # GPUstats
 A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi programmically in Python.
 
+[Installation](#installation)
+[Usage](#usage)
+
 ## Installation
 1. Download or clone repository to your computer
 2. Add folder to ~/.bashrc
@@ -19,3 +22,5 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
 
   4. Save ~/.bashrc and close gedit
   5. Restart your terminal
+
+## Usage
