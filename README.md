@@ -1,5 +1,5 @@
 # GPUstats
-A Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
+`GPUstats` is a Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
 `GPUstats` locates all GPUs on the computer, determines their availablity and returns a ordered list of available GPUs.
 Availablity is based opun the current memory consumption and load of each GPU.
 The module is written with GPU selection for Deep Learning in mind, but it is not task/library specific and it can be applied to any task, where it may be useful to identify available GPUs.
