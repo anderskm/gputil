@@ -66,6 +66,16 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
 ## Usage
 
+To include `GPUstats` in our Python code, all you hve to do is included it at the beginning of your script:
+
+```python
+import GPUstats
+```
+
+Once included all functions are available. The functions along with a short description of inputs, outputs and their functionality can be found in the following two sections.
+
+### Main functions
+
 ```python
 deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
 ```
@@ -106,6 +116,8 @@ Prints the current status (id, memory usage and load) of all GPUs
   * _None_
 * Outputs
   * _None_
+
+### Helper functions
 
 ```python
 GPUs = GPUstats.getGPUs()
