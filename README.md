@@ -6,8 +6,21 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Examples](#examples)
+1. [License](#license)
 
 ## Installation
+
+### Requirements
+CUDA GPU with latest CUDA driver installed.
+GPUstats uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. 'nvidia-smi' should be installed automatically, when you install your CUDA driver.
+Tested on CUDA driver version 367.57 and 375.26.
+
+Python libraries:
+* subprocess
+* numpy
+* random
+
+### 
 1. Download or clone repository to your computer
 2. Add folder to ~/.bashrc
   1. Open a new terminal (Press Ctrl+Alt+T)
@@ -165,3 +178,6 @@ I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow devi
 I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:3) -> (device: 3, name: TITAN X (Pascal), pci bus id: 0000:84:00.0)
 a+b=42
 ```
+
+## License
+See [LICENSE](https://github.com/anderskm/gpustats/blob/master/LICENSE)
