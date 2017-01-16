@@ -98,8 +98,8 @@ import tensorflow as tf
 import GPUstats
 
 # Get the first available GPU
-DEVICE_ID = GPUstats.getFirstAvailable()
-DEVICE_ID = DEVICE_ID[0] # grab first element from list
+DEVICE_ID_LIST = GPUstats.getFirstAvailable()
+DEVICE_ID = DEVICE_ID_LIST[0] # grab first element from list
 
 # Set CUDA_VISIBLE_DEVICES to first available device id
 os.environ["CUDA_VISIBLE_DEVICES"] = str(DEVICE_ID)
