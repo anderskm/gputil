@@ -2,7 +2,7 @@
 # 
 # A Python module for getting the GPU status from NVIDA GPUs using nvidia-smi programmically in Python.
 #
-# Author: Anders Krogh Mortensen
+# Author: Anders Krogh Mortensen (anderskm)
 # Date:   16 January 2017
 #
 # LICENSE
