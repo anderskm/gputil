@@ -15,6 +15,8 @@ GPUstats uses the program `nvidia-smi` to get the GPU status of all available CU
 
 Python libraries:
 * [numpy](http://www.numpy.org/)
+* subprocess ([The Python Standard Library](https://docs.python.org/3/library/))
+* random ([The Python Standard Library](https://docs.python.org/3/library/))
 
 Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
