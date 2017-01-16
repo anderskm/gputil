@@ -14,9 +14,7 @@ CUDA GPU with latest CUDA driver installed.
 GPUstats uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. 'nvidia-smi' should be installed automatically, when you install your CUDA driver.
 
 Python libraries:
-* subprocess
-* numpy
-* random
+* [numpy](http://www.numpy.org/)
 
 Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
