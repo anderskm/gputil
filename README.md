@@ -1,5 +1,7 @@
 # GPUstats
-A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi programmatically in Python.
+A Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
+`GPUstats` locates all GPUs on the computer, determines their availablity and returns a ordered list of available GPUs.
+Availablity is based opun the current memory consumption and load of each GPU.
 
 **Table of Contents**
 
@@ -7,6 +9,7 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
 1. [Installation](#installation)
 1. [Usage](#usage)
 1. [Examples](#examples)
+  1. [Occupy only a single GPU in TensorFlow](#Occupy only a single GPU in TensorFlow)
 1. [License](#license)
 
 ## Requirements
