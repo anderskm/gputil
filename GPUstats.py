@@ -4,6 +4,7 @@
 #
 # Author: Anders Krogh Mortensen (anderskm)
 # Date:   16 January 2017
+# Web:    https://github.com/anderskm/gpustats
 #
 # LICENSE
 #
