@@ -1,5 +1,5 @@
 # GPUstats
-A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi programmically in Python.
+A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi programmatically in Python.
 
 **Table of Contents**
 
@@ -57,7 +57,7 @@ GPUstats.showUtilization()
 ## Examples
 
 ### Occupy only a single GPU in TensorFlow
-By default, TensorFlow will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`). By setting the environment variable `CUDA_VISIBLE_DEVICES`, the GPUs can be hidden from TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmically based on the available GPUs.
+By default, TensorFlow will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`). By setting the environment variable `CUDA_VISIBLE_DEVICES`, the GPUs can be hidden from TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmatically based on the available GPUs.
 Below is a minimum working example of how to only occupy 1 GPU in TensorFlow using GPUstats.
 To run the code, copy it into a new python file (e.g. `demo_tensorflow_gpustats.py`) and run it (e.g. enter `python demo_tensorflow_gpustats.py` in a terminal).
 
