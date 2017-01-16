@@ -5,6 +5,7 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
 
 1. [Installation](#installation)
 2. [Usage](#usage)
+3. [Examples](#examples)
 
 ## Installation
 1. Download or clone repository to your computer
