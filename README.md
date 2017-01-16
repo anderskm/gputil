@@ -2,6 +2,7 @@
 A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi programmically in Python.
 
 **Table of Contents**
+
 1. [Installation](#installation)
 2. [Usage](#usage)
 
@@ -25,3 +26,6 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
   5. Restart your terminal
 
 ## Usage
+See demo_GPUstats.py
+
+(Work in progress)
