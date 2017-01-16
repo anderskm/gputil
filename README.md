@@ -11,7 +11,7 @@ A Python library for getting the GPU status from NVIDA GPUs using nvidia-smi pro
 
 ## Requirements
 CUDA GPU with latest CUDA driver installed.
-GPUstats uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. 'nvidia-smi' should be installed automatically, when you install your CUDA driver.
+GPUstats uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. `nvidia-smi` should be installed automatically, when you install your CUDA driver.
 
 Python libraries:
 * [numpy](http://www.numpy.org/)
