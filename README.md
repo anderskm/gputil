@@ -10,7 +10,7 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 1. [Installation](#installation)
 1. [Usage](#usage)
 1. [Examples](#examples)
-  1. [Select a random available GPU in Caffe](#select-a-random-available-gpu-in-caffe)
+  1. [Select first available GPU in Caffe](#select-first-available-gpu-in-caffe)
   1. [Occupy only 1 GPU in TensorFlow](#occupy-only-1-gpu-in-tensorflow)
 1. [License](#license)
 
@@ -91,7 +91,7 @@ See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPU
 ## Examples
 
 
-### Select a random available GPU in Caffe
+### Select first available GPU in Caffe
 In the Deep Learning library [Caffe](http://caffe.berkeleyvision.org/), the user can switch between using the CPU or GPU through their Python interface.
 This is done by calling the methods `caffe.set_mode_cpu()` and `caffe.set_mode_gpu()`, respectively.
 Below is a minimum working example for selecting the first available GPU with GPUstats to run a Caffe network.
