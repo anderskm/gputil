@@ -178,6 +178,7 @@ By default, [TensorFlow](https://www.tensorflow.org/)  will occupy all available
 By setting the environment variable `CUDA_VISIBLE_DEVICES`, the user can mask which GPUs should be visible to TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmatically based on the available GPUs.
 Below is a minimum working example of how to occupy only 1 GPU in TensorFlow using GPUstats.
 To run the code, copy it into a new python file (e.g. `demo_tensorflow_gpustats.py`) and run it (e.g. enter `python demo_tensorflow_gpustats.py` in a terminal).
+**Note:** Even if you run your code on the CPU, TensorFlow will occupy all available GPUs. To avoid this, all GPUs can be "turned off" with `os.environ["CUDA_VISIBLE_DEVICES"] = ''`.
 
 ```python
 # Import os to set the environment variable CUDA_VISIBLE_DEVICES
