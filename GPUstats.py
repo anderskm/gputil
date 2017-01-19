@@ -35,14 +35,17 @@ import numpy as np
 import random
 
 class  GPU:
-    def __init__(self, ID, load, memory):
+    def __init__(self, ID, load, memoryTotal, memoryUsed, memoryFree):
         self.id = ID
         self.load = load
-        self.memory = memory
+        self.memoryUtil = memoryUsed/memoryTotal
+        self.memoryTotal = memoryTotal
+        self.memoryUsed = memoryUsed
+        self.memoryFree = memoryFree
 
 def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
-    p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,memory.used","--format=csv,noheader,nounits"],stdout=PIPE)
+    p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,memory.total,memory.used,memory.free","--format=csv,noheader,nounits"],stdout=PIPE)
     output = str(p.stdout.read())
     output = output[2:-1] # Remove b' and ' from string added by python
     # print(output)
@@ -54,22 +57,28 @@ def getGPUs():
     #print(numDevices)
     deviceIds = np.empty(numDevices,dtype=int)
     gpuUtil = np.empty(numDevices,dtype=float)
-    memUtil = np.empty(numDevices,dtype=float)
+    memTotal = np.empty(numDevices,dtype=float)
+    memUsed = np.empty(numDevices,dtype=float)
+    memFree = np.empty(numDevices,dtype=float)
     GPUs = []
     for g in range(numDevices):
         line = lines[g]
 #        print(line)
         vals = line.split(', ')
 #        print(vals)
-        for i in range(3):
+        for i in range(5):
 #            print(vals[i])
             if (i == 0):
                 deviceIds[g] = int(vals[i])
             elif (i == 1):
                 gpuUtil[g] = float(vals[i])/100
             elif (i == 2):
-                memUtil[g] = float(vals[i])/100
-        GPUs.append(GPU(deviceIds[g], gpuUtil[g], memUtil[g]))
+                memTotal[g] = float(vals[i])
+            elif (i == 3):
+                memUsed[g] = float(vals[i])
+            elif (i == 4):
+                memFree[g] = float(vals[i])
+        GPUs.append(GPU(deviceIds[g], gpuUtil[g], memTotal[g], memUsed[g], memFree[g]))
     return GPUs #(deviceIds, gpuUtil, memUtil)
 
 def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5):
@@ -100,7 +109,7 @@ def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5):
     elif (order == 'load'):
         GPUs.sort(key=lambda x: x.load, reverse=False)
     elif (order == 'memory'):
-        GPUs.sort(key=lambda x: x.memory, reverse=False)
+        GPUs.sort(key=lambda x: x.memoryUtil, reverse=False)
 
     # Extract the number of desired GPUs, but limited to the total number of available GPUs
     GPUs = GPUs[0:np.minimum(limit, len(GPUs))]
@@ -113,7 +122,7 @@ def getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5):
     # Determine, which GPUs are available
     GPUavailability = np.zeros(len(GPUs))
     for i in range(len(GPUs)):
-        if (GPUs[i].load < maxLoad) & (GPUs[i].memory < maxMemory):
+        if (GPUs[i].load < maxLoad) & (GPUs[i].memoryUtil < maxMemory):
             GPUavailability[i] = 1
     return GPUavailability
 
@@ -132,4 +141,4 @@ def showUtilization():
     print(' ID  GPU  MEM')
     print('--------------')
     for i in range(len(GPUs)):
-        print(' {0:2d}  {1:3.0f}% {2:3.0f}%'.format(GPUs[i].id,GPUs[i].load*100,GPUs[i].memory*100))
+        print(' {0:2d}  {1:3.0f}% {2:3.0f}%'.format(GPUs[i].id,GPUs[i].load*100,GPUs[i].memoryUtil*100))
