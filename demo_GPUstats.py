@@ -32,6 +32,9 @@ print(firstGPU)
 # Show the utilization of all GPUs in a nice table
 GPUstats.showUtilization()
 
+# Show all stats of all GPUs in a nice table
+GPUstats.showUtilization(all=True)
+
 print(GPUstats.getAvailable(order = 'first', limit=999))
 
 print(GPUstats.getAvailable(order = 'last'))
