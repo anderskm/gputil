@@ -42,7 +42,7 @@ class  GPU:
 
 def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
-    p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,utilization.memory","--format=csv,noheader,nounits"],stdout=PIPE)
+    p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,memory.used","--format=csv,noheader,nounits"],stdout=PIPE)
     output = str(p.stdout.read())
     output = output[2:-1] # Remove b' and ' from string added by python
     # print(output)
