@@ -33,6 +33,7 @@
 from subprocess import Popen, PIPE, STDOUT
 import numpy as np
 import random
+import time
 
 class  GPU:
     def __init__(self, ID, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active):
@@ -142,15 +143,33 @@ def getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5):
             GPUavailability[i] = 1
     return GPUavailability
 
-def getFirstAvailable(maxLoad=0.5, maxMemory=0.5):
+def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False):
     #GPUs = getGPUs()
     #firstAvailableGPU = np.NaN
     #for i in range(len(GPUs)):
     #    if (GPUs[i].load < maxLoad) & (GPUs[i].memory < maxMemory):
     #        firstAvailableGPU = GPUs[i].id
     #        break
-    #return firstAvailableGPU
-    return getAvailable(order = 'first', limit = 1, maxLoad = maxLoad, maxMemory = maxMemory)
+    #return firstAvailableGPU       
+    for i in range(attempts):
+        if (verbose):
+            print('Attempting (' + str(i+1) + '/' + str(attempts) + ') to locate available GPU.')
+        # Get first available GPU
+        available = getAvailable(order = order, limit = 1, maxLoad = maxLoad, maxMemory = maxMemory)
+        # If an available GPU was found, break for loop.
+        if (available):
+            if (verbose):
+                print('GPU ' + str(available) + ' located!')
+            break
+        # If this is not the last attempt, sleep for 'interval' seconds
+        if (i != attempts-1):
+            time.sleep(interval)
+    # Check if an GPU was found, or if the attempts simply ran out. Throw error, if no GPU was found
+    if (not(available)):
+        raise RuntimeError('Could not find an available GPU after ' + str(attempts) + ' attempts with ' + str(interval) + ' seconds interval.')
+    
+    # Return found GPU
+    return available
 
 def showUtilization(all=False):
     GPUs = getGPUs()
