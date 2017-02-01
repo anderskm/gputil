@@ -97,15 +97,19 @@ Returns a list ids of available GPUs. Availablity is determined based on current
   * deviceIDs - list of all available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The list is ordered according to `order`. The maximum number of returned device ids is limted by `limit`.
 
 ```python
-deviceID = GPUstats.getFirstAvailable(maxLoad=0.5, maxMemory=0.5)
+deviceID = GPUstats.getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False)
 ```
-Returns a list with 0 or 1 ids of the first available GPU. Lower ordered ids are prioritized over higher order ids.
-Availablity is determined based on current memory usage and load.
-Same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
+Returns the first avaiable GPU. Availablity is determined based on current memory usage and load, and the ordering is determined by the specified order.
+If no available GPU is found, an error is thrown.
+When using the default values, it is the same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
 
 * Inputs
+  * `order' - See the description for `GPUstats.getAvailable(...)`
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
+  * `attempts` - Number of attempts the function should make before giving up finding an available GPU. (**default = 1**)
+  * `interval` - Interval in seconds between each attempt to find an available GPU. (**default = 900** --> 15 mins)
+  * `verbose` - If `True`, prints the attempt number before each attempt and the GPU id if an available is found.
 * Outputs
   * deviceID - list with 1 element containing the first available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The order and limit are fixed to `'first'` and `1`, respectively.
 
