@@ -1,6 +1,6 @@
-# GPUstats
-`GPUstats` is a Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
-`GPUstats` locates all GPUs on the computer, determines their availablity and returns a ordered list of available GPUs.
+# GPUtil
+`GPUtil` is a Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
+`GPUtil` locates all GPUs on the computer, determines their availablity and returns a ordered list of available GPUs.
 Availablity is based opun the current memory consumption and load of each GPU.
 The module is written with GPU selection for Deep Learning in mind, but it is not task/library specific and it can be applied to any task, where it may be useful to identify available GPUs.
 
@@ -18,7 +18,7 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 
 ## Requirements
 CUDA GPU with latest CUDA driver installed.
-GPUstats uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. `nvidia-smi` should be installed automatically, when you install your CUDA driver.
+GPUtil uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. `nvidia-smi` should be installed automatically, when you install your CUDA driver.
 
 Python libraries:
 * [numpy](http://www.numpy.org/)
@@ -29,7 +29,7 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
 ## Installation
 1. Download or clone repository to your computer
-2. Add GPUstats folder to ~/.bashrc
+2. Add GPUtil folder to ~/.bashrc
   1. Open a new terminal (Press Ctrl+Alt+T)
   2. Open bashrc:
 
@@ -37,25 +37,25 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
       gedit ~/.bashrc
       ```
 
-  3. Added your GPUstats folder to the environment variable `PYTHONPATH` (replace `<path_to_gpustats>` with your folder path):
+  3. Added your GPUtil folder to the environment variable `PYTHONPATH` (replace `<path_to_gputil>` with your folder path):
 
       ```
-      export PYTHONPATH="$PYTHONPATH:<path_to_gpustats>"
+      export PYTHONPATH="$PYTHONPATH:<path_to_gputil>"
 
       Example:
-      export PYTHONPATH="$PYTHONPATH:/home/anderskm/github/gpustats"
+      export PYTHONPATH="$PYTHONPATH:/home/anderskm/github/gputil"
       ```
 
   4. Save ~/.bashrc and close gedit
   5. Restart your terminal
 1. Test the installation
-  1. Open a terminal in a folder other than the GPUstats folder
+  1. Open a terminal in a folder other than the GPUtil folder
   2. Start a python console by typing `python` in the terminal
   3. In the newly opened python console, type:
 
     ```python
-    import GPUstats
-    GPUstats.showUtilization()
+    import GPUtil
+    GPUtil.showUtilization()
     ```
 
   4. Your output should look something like following, depending on your number of GPUs and their current usage:
@@ -68,10 +68,10 @@ Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
 ## Usage
 
-To include `GPUstats` in our Python code, all you hve to do is included it at the beginning of your script:
+To include `GPUtil` in our Python code, all you hve to do is included it at the beginning of your script:
 
 ```python
-import GPUstats
+import GPUtil
 ```
 
 Once included all functions are available. The functions along with a short description of inputs, outputs and their functionality can be found in the following two sections.
@@ -79,7 +79,7 @@ Once included all functions are available. The functions along with a short desc
 ### Main functions
 
 ```python
-deviceIDs = GPUstats.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
+deviceIDs = GPUtil.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
 ```
 Returns a list ids of available GPUs. Availablity is determined based on current memory usage and load. The order, maximum number of devices, their maximum load and maximum memory consumption are determined by the input arguments.
 
@@ -97,14 +97,14 @@ Returns a list ids of available GPUs. Availablity is determined based on current
   * deviceIDs - list of all available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The list is ordered according to `order`. The maximum number of returned device ids is limted by `limit`.
 
 ```python
-deviceID = GPUstats.getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False)
+deviceID = GPUtil.getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False)
 ```
 Returns the first avaiable GPU. Availablity is determined based on current memory usage and load, and the ordering is determined by the specified order.
 If no available GPU is found, an error is thrown.
 When using the default values, it is the same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
 
 * Inputs
-  * `order' - See the description for `GPUstats.getAvailable(...)`
+  * `order' - See the description for `GPUtil.getAvailable(...)`
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
   * `attempts` - Number of attempts the function should make before giving up finding an available GPU. (**default = 1**)
@@ -115,7 +115,7 @@ When using the default values, it is the same as `getAvailable(order = 'first', 
 
 
 ```python
-GPUstats.showUtilization()
+GPUtil.showUtilization()
 ```
 Prints the current status (id, memory usage and load) of all GPUs
 * Inputs
@@ -126,7 +126,7 @@ Prints the current status (id, memory usage and load) of all GPUs
 ### Helper functions
 
 ```python
-GPUs = GPUstats.getGPUs()
+GPUs = GPUtil.getGPUs()
 ```
 * Inputs
   * _None_
@@ -134,19 +134,19 @@ GPUs = GPUstats.getGPUs()
   * `GPUs` - list of all GPUs. Each `GPU` corresponds to one GPU in the computer and contains a device id, relative load and relative memory usage.
 
 ```python
-GPUavailability = GPUstats.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
+GPUavailability = GPUtil.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
 ```
-Given a list of `GPUs` (see `GPUstats.getGPUs()`), return a equally sized list of ones and zeroes indicating which corresponding GPUs are available.
+Given a list of `GPUs` (see `GPUtil.getGPUs()`), return a equally sized list of ones and zeroes indicating which corresponding GPUs are available.
 
 * Inputs
-  * `GPUs` - List of `GPUs`. See `GPUstats.getGPUs()
+  * `GPUs` - List of `GPUs`. See `GPUtil.getGPUs()
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
 * Outputs
   * GPUavailability - binary list indicating if `GPUs` are available or not. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively.
 
 
-See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPUstats.py) for examples and more details.
+See [demo_GPUtil.py](https://github.com/anderskm/gputil/blob/master/demo_GPUtil.py) for examples and more details.
 
 ## Examples
 
@@ -154,15 +154,15 @@ See [demo_GPUstats.py](https://github.com/anderskm/gpustats/blob/master/demo_GPU
 ### Select first available GPU in Caffe
 In the Deep Learning library [Caffe](http://caffe.berkeleyvision.org/), the user can switch between using the CPU or GPU through their Python interface.
 This is done by calling the methods `caffe.set_mode_cpu()` and `caffe.set_mode_gpu()`, respectively.
-Below is a minimum working example for selecting the first available GPU with GPUstats to run a Caffe network.
+Below is a minimum working example for selecting the first available GPU with GPUtil to run a Caffe network.
 
 ```python
-# Import caffe and GPUstats
+# Import caffe and GPUtil
 import caffe
-import GPUstats
+import GPUtil
 
 # Get the first available GPU
-DEVICE_ID_LIST = GPUstats.getFirstAvailable()
+DEVICE_ID_LIST = GPUtil.getFirstAvailable()
 DEVICE_ID = DEVICE_ID_LIST[0] # grab first element from list
 
 # Select GPU mode
@@ -179,9 +179,9 @@ Calling directly Caffe from the terminal allows for using multiple GPUs.
 
 ### Occupy only 1 GPU in TensorFlow
 By default, [TensorFlow](https://www.tensorflow.org/)  will occupy all available GPUs when using a gpu as a device (e.g. `tf.device('\gpu:0')`).
-By setting the environment variable `CUDA_VISIBLE_DEVICES`, the user can mask which GPUs should be visible to TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUstats.py, the CUDA_VISIBLE_DEVICES can be set programmatically based on the available GPUs.
-Below is a minimum working example of how to occupy only 1 GPU in TensorFlow using GPUstats.
-To run the code, copy it into a new python file (e.g. `demo_tensorflow_gpustats.py`) and run it (e.g. enter `python demo_tensorflow_gpustats.py` in a terminal).
+By setting the environment variable `CUDA_VISIBLE_DEVICES`, the user can mask which GPUs should be visible to TensorFlow via CUDA (See [CUDA_VISIBLE_DEVICES - Masking GPUs](http://acceleware.com/blog/cudavisibledevices-masking-gpus)). Using GPUtil.py, the CUDA_VISIBLE_DEVICES can be set programmatically based on the available GPUs.
+Below is a minimum working example of how to occupy only 1 GPU in TensorFlow using GPUtil.
+To run the code, copy it into a new python file (e.g. `demo_tensorflow_gputil.py`) and run it (e.g. enter `python demo_tensorflow_gputil.py` in a terminal).
 
 **Note:** Even if you set the device you run your code on to a CPU, TensorFlow will occupy all available GPUs. To avoid this, all GPUs can be hidden from TensorFlow with `os.environ["CUDA_VISIBLE_DEVICES"] = ''`.
 
@@ -189,10 +189,10 @@ To run the code, copy it into a new python file (e.g. `demo_tensorflow_gpustats.
 # Import os to set the environment variable CUDA_VISIBLE_DEVICES
 import os
 import tensorflow as tf
-import GPUstats
+import GPUtil
 
 # Get the first available GPU
-DEVICE_ID_LIST = GPUstats.getFirstAvailable()
+DEVICE_ID_LIST = GPUtil.getFirstAvailable()
 DEVICE_ID = DEVICE_ID_LIST[0] # grab first element from list
 
 # Set CUDA_VISIBLE_DEVICES to first available device id
@@ -295,4 +295,4 @@ a+b=42
 ```
 
 ## License
-See [LICENSE](https://github.com/anderskm/gpustats/blob/master/LICENSE)
+See [LICENSE](https://github.com/anderskm/gputil/blob/master/LICENSE)

@@ -1,10 +1,10 @@
-# GPUstats
+# GPUtil - GPU utilization
 # 
-# A Python module for getting the GPU status from NVIDA GPUs using nvidia-smi programmically in Python.
+# A Python module for programmically getting the GPU utilization from NVIDA GPUs using nvidia-smi
 #
 # Author: Anders Krogh Mortensen (anderskm)
 # Date:   16 January 2017
-# Web:    https://github.com/anderskm/gpustats
+# Web:    https://github.com/anderskm/gputil
 #
 # LICENSE
 #
