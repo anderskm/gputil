@@ -104,7 +104,7 @@ If no available GPU is found, an error is thrown.
 When using the default values, it is the same as `getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)`
 
 * Inputs
-  * `order' - See the description for `GPUtil.getAvailable(...)`
+  * `order` - See the description for `GPUtil.getAvailable(...)`
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
   * `attempts` - Number of attempts the function should make before giving up finding an available GPU. (**default = 1**)
@@ -139,7 +139,7 @@ GPUavailability = GPUtil.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
 Given a list of `GPUs` (see `GPUtil.getGPUs()`), return a equally sized list of ones and zeroes indicating which corresponding GPUs are available.
 
 * Inputs
-  * `GPUs` - List of `GPUs`. See `GPUtil.getGPUs()
+  * `GPUs` - List of `GPUs`. See `GPUtil.getGPUs()`
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
 * Outputs
