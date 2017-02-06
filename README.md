@@ -1,4 +1,4 @@
-# GPUtil
+o# GPUtil
 `GPUtil` is a Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
 `GPUtil` locates all GPUs on the computer, determines their availablity and returns a ordered list of available GPUs.
 Availablity is based opun the current memory consumption and load of each GPU.
@@ -19,6 +19,8 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 ## Requirements
 CUDA GPU with latest CUDA driver installed.
 GPUtil uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. `nvidia-smi` should be installed automatically, when you install your CUDA driver.
+
+Python version 3.X, but support for python 2.7 is on the todo-list.
 
 Python libraries:
 * [numpy](http://www.numpy.org/)
@@ -321,4 +323,4 @@ a+b=42
 ```
 
 ## License
-See [LICENSE](https://github.com/anderskm/gputil/blob/master/LICENSE)
+See [LICENSE](https://github.com/anderskm/gputil/blob/master/LICENSE.txt)
