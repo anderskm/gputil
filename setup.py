@@ -8,7 +8,7 @@ setup(
       author = 'Anders Krogh Mortensen',
       author_email = 'anderskroghm@gmail.com',
       url = 'https://github.com/anderskm/gputil',
-      download_url = 'https://github.com/anderskm/gputil/tarball/v1.2.0',
+      download_url = 'https://github.com/anderskm/gputil/tarball/v1.2.1',
       keywords = ['gpu','utilization','load','memory','available','usage','free'],
       install_requires = ['numpy'],
       classifiers = [],
