@@ -28,6 +28,31 @@ Python libraries:
 Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
 
 ## Installation
+
+1. Open a terminal (Ctrl+Shift+T)
+2. Type `pip install gputil`
+3. Test the installation
+  1. Open a terminal in a folder other than the GPUtil folder
+  2. Start a python console by typing `python` in the terminal
+  3. In the newly opened python console, type:
+
+    ```python
+    import GPUtil
+    GPUtil.showUtilization()
+    ```
+
+  4. Your output should look something like following, depending on your number of GPUs and their current usage:
+
+    ```
+     ID  GPU  MEM
+    --------------
+      0    0%   0%
+    ```
+
+
+
+### Old way of installation
+
 1. Download or clone repository to your computer
 2. Add GPUtil folder to ~/.bashrc
   1. Open a new terminal (Press Ctrl+Alt+T)
