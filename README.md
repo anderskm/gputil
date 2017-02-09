@@ -20,7 +20,7 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 CUDA GPU with latest CUDA driver installed.
 GPUtil uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. `nvidia-smi` should be installed automatically, when you install your CUDA driver.
 
-Python version 3.X, but support for python 2.7 is on the todo-list.
+Supports both Python 2.X and 3.X.
 
 Python libraries:
 * [numpy](http://www.numpy.org/)
