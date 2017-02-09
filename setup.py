@@ -9,7 +9,7 @@ setup(
       author_email = 'anderskroghm@gmail.com',
       url = 'https://github.com/anderskm/gputil',
       download_url = 'https://github.com/anderskm/gputil/tarball/v1.2.3',
-      keywords = ['gpu','utilization','load','memory','available','usage','free'],
+      keywords = ['gpu','utilization','load','memory','available','usage','free','select','nvidia'],
       install_requires = ['numpy'],
       classifiers = [],
       license = 'MIT',
