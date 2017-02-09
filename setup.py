@@ -12,4 +12,5 @@ setup(
       keywords = ['gpu','utilization','load','memory','available','usage','free'],
       install_requires = ['numpy'],
       classifiers = [],
+      license = 'MIT',
 )
