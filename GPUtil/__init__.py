@@ -40,7 +40,7 @@ class  GPU:
     def __init__(self, ID, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active):
         self.id = ID
         self.load = load
-        self.memoryUtil = memoryUsed/memoryTotal
+        self.memoryUtil = float(memoryUsed)/float(memoryTotal)
         self.memoryTotal = memoryTotal
         self.memoryUsed = memoryUsed
         self.memoryFree = memoryFree
@@ -55,11 +55,12 @@ def getGPUs():
     p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode","--format=csv,noheader,nounits"],stdout=PIPE)
     output = p.stdout.read().decode('UTF-8')
     # output = output[2:-1] # Remove b' and ' from string added by python
-    # print(output)
+    #print(output)
     ## Parse output
     # Split on line break
     #lines = output.split('\n')
     lines = output.split(os.linesep)
+    #print(lines)
     numDevices = len(lines)-1
     deviceIds = np.empty(numDevices,dtype=int)
     gpuUtil = np.empty(numDevices,dtype=float)
@@ -70,9 +71,9 @@ def getGPUs():
     GPUs = []
     for g in range(numDevices):
         line = lines[g]
-#        print(line)
+        #print(line)
         vals = line.split(', ')
-#        print(vals)
+        #print(vals)
         for i in range(10):
 #            print(vals[i])
             if (i == 0):
