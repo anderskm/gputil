@@ -31,6 +31,7 @@
 # SOFTWARE.
 
 from subprocess import Popen, PIPE, STDOUT
+import os
 import numpy as np
 import random
 import time
@@ -52,15 +53,14 @@ class  GPU:
 def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
     p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode","--format=csv,noheader,nounits"],stdout=PIPE)
-    output = str(p.stdout.read())
-    output = output[2:-1] # Remove b' and ' from string added by python
+    output = p.stdout.read().decode('UTF-8')
+    # output = output[2:-1] # Remove b' and ' from string added by python
     # print(output)
     ## Parse output
     # Split on line break
-    lines = output.split('\\n')
-    # print(lines)
+    #lines = output.split('\n')
+    lines = output.split(os.linesep)
     numDevices = len(lines)-1
-    #print(numDevices)
     deviceIds = np.empty(numDevices,dtype=int)
     gpuUtil = np.empty(numDevices,dtype=float)
     memTotal = np.empty(numDevices,dtype=int)
