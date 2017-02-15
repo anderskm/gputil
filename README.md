@@ -223,12 +223,13 @@ import GPUtil
 DEVICE_ID_LIST = GPUtil.getFirstAvailable()
 DEVICE_ID = DEVICE_ID_LIST[0] # grab first element from list
 
-# Set CUDA_VISIBLE_DEVICES to first available device id
+# Set CUDA_VISIBLE_DEVICES to mask out all other GPUs than the first available device id
 os.environ["CUDA_VISIBLE_DEVICES"] = str(DEVICE_ID)
 
-# Store and print the device name
-device = '/gpu:' + str(DEVICE_ID)
-print('Device: ' + device)
+# Since all other GPUs are masked out, the first available GPU will now be identified as GPU:0
+device = '/gpu:0'
+print('Device ID (unmasked): ' + str(DEVICE_ID))
+print('Device ID (masked): ' + str(0))
 
 # Run a minimum working example on the selected GPU
 # Start a session
