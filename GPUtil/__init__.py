@@ -33,7 +33,6 @@
 from subprocess import Popen, PIPE
 import os
 import numpy as np
-import random
 import time
 
 
@@ -126,7 +125,7 @@ def getAvailable(order='first', limit=1, maxLoad=.5, maxMemory=0.5):
     elif (order == 'last'):
         GPUs.sort(key=lambda x: x.id, reverse=True)
     elif (order == 'random'):
-        GPUs = [GPUs[g] for g in random.sample(range(0, len(GPUs)), len(GPUs))]
+        GPUs = [GPUs[g] for g in np.random.permutation(range(len(GPUs)))]
     elif (order == 'load'):
         GPUs.sort(key=lambda x: x.load, reverse=False)
     elif (order == 'memory'):
