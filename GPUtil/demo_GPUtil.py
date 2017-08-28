@@ -1,4 +1,4 @@
-import GPUtil as GPU
+import __init__ as GPU
 
 # Get all device ids and their processing and memory utiliazion
 #(deviceIds, gpuUtil, memUtil) = GPU.getGPUs()
@@ -27,23 +27,23 @@ print(GPU.getAvailable(order = 'memory', limit = 999, maxLoad=0.1))
 
 # Get the first available GPU
 firstGPU = GPU.getFirstAvailable()
-print('First available GPU id:')
+print('First available GPU id:'),
 print(firstGPU)
 
 # Get the first available GPU, where memory usage is less than 90% and processing is less than 80%
-print('First available GPU id (memory < 90%, load < 80%):')
+print('First available GPU id (memory < 90%, load < 80%):'),
 firstGPU = GPU.getFirstAvailable(maxMemory = 0.9, maxLoad = 0.8)
 print(firstGPU)
 
 # Get the first available GPU, where processing is less than 1%
-print('First available GPU id (load < 1%):')
+print('First available GPU id (load < 1%):'),
 firstGPU = GPU.getFirstAvailable(attempts = 5, interval = 5, maxLoad = 0.01, verbose=True)
 print(firstGPU)
 # NOTE: If all your GPUs currently have a load larger than 1%, this step will
 # fail. It's not a bug! It is intended to do so, if it does not find an available GPU.
 
 # Get the first available GPU, where memory usage is less than 1%
-print('First available GPU id (memory < 1%):')
+print('First available GPU id (memory < 1%):'),
 firstGPU = GPU.getFirstAvailable(attempts = 5, interval = 5, maxMemory = 0.01, verbose=True)
 print(firstGPU)
 # NOTE: If all your GPUs currently have a memory consumption larger than 1%,
