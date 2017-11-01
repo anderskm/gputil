@@ -57,22 +57,6 @@ def safeFloatCast(strNumber):
         number = float('nan')
     return number
 
-def compareWithNaN(a, b):
-    if np.isnan(a) & np.isnan(b):
-        return 0
-    elif np.isnan(a):
-        return 1
-    elif np.isnan(b):
-        return -1
-    
-    if (a < b):
-        return -1
-    elif (b < a):
-        return 1
-    else:
-        return 0
-
-
 def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
     p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode", "--format=csv,noheader,nounits"], stdout=PIPE)
@@ -142,16 +126,16 @@ def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, inc
 
     # Sort available GPUs according to the order argument
     if (order == 'first'):
-        GPUs.sort(key=lambda x: x.id, reverse=False, cmp=compareWithNaN)
+        GPUs.sort(key=lambda x: np.Inf if np.isnan(x.id) else x.id, reverse=False)
     elif (order == 'last'):
-        GPUs.sort(key=lambda x: x.id, reverse=True, cmp=compareWithNaN)
+        GPUs.sort(key=lambda x: -np.Inf if np.isnan(x.id) else x.id, reverse=True)
     elif (order == 'random'):
         GPUs = [GPUs[g] for g in np.random.permutation(range(len(GPUs)))]
     elif (order == 'load'):
-        GPUs.sort(key=lambda x: x.load, reverse=False, cmp=compareWithNaN)
+        GPUs.sort(key=lambda x: np.Inf if np.isnan(x.load) else x.load, reverse=False)
     elif (order == 'memory'):
-        GPUs.sort(key=lambda x: x.memoryUtil, reverse=False, cmp=compareWithNaN)
-
+        GPUs.sort(key=lambda x: np.Inf if np.isnan(x.memoryUtil) else x.memoryUtil, reverse=False)
+        
     # Extract the number of desired GPUs, but limited to the total number of available GPUs
     GPUs = GPUs[0:min(limit, len(GPUs))]
 
