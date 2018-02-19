@@ -191,10 +191,10 @@ def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, i
 def showUtilization(all=False):
     GPUs = getGPUs()
     if (all):
-        print(' ID | Name | Serial || GPU util. | Memory util. || Memory total | Memory used | Memory free || Display mode | Display active |')
+        print(' ID | Name | Serial | UUID || GPU util. | Memory util. || Memory total | Memory used | Memory free || Display mode | Display active |')
         print('------------------------------------------------------------------------------------------------------------------------------')
         for gpu in GPUs:
-            print(' {0:2d} | {1:s}  | {2:s} || {3:3.0f}% | {4:3.0f}% || {5:.0f}MB | {6:.0f}MB | {7:.0f}MB || {8:s} | {9:s}'.format(gpu.id,gpu.name,gpu.serial,gpu.load*100,gpu.memoryUtil*100,gpu.memoryTotal,gpu.memoryUsed,gpu.memoryFree,gpu.display_mode,gpu.display_active))
+            print(' {0:2d} | {1:s}  | {2:s} | {3:s} || {4:3.0f}% | {5:3.0f}% || {6:.0f}MB | {7:.0f}MB | {8:.0f}MB || {9:s} | {10:s}'.format(gpu.id,gpu.name,gpu.serial,gpu.uuid,gpu.load*100,gpu.memoryUtil*100,gpu.memoryTotal,gpu.memoryUsed,gpu.memoryFree,gpu.display_mode,gpu.display_active))
     else:
         print(' ID  GPU  MEM')
         print('--------------')
