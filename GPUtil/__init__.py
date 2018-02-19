@@ -1,5 +1,5 @@
 # GPUtil - GPU utilization
-# 
+#
 # A Python module for programmically getting the GPU utilization from NVIDA GPUs using nvidia-smi
 #
 # Author: Anders Krogh Mortensen (anderskm)
@@ -37,8 +37,9 @@ import time
 
 
 class GPU:
-    def __init__(self, ID, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active):
+    def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active):
         self.id = ID
+        self.uuid = uuid
         self.load = load
         self.memoryUtil = float(memoryUsed)/float(memoryTotal)
         self.memoryTotal = memoryTotal
@@ -49,7 +50,7 @@ class GPU:
         self.serial = serial
         self.display_mode = display_mode
         self.display_active = display_active
-        
+
 def safeFloatCast(strNumber):
     try:
         number = float(strNumber)
@@ -59,7 +60,7 @@ def safeFloatCast(strNumber):
 
 def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
-    p = Popen(["nvidia-smi","--query-gpu=index,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode", "--format=csv,noheader,nounits"], stdout=PIPE)
+    p = Popen(["nvidia-smi","--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode", "--format=csv,noheader,nounits"], stdout=PIPE)
     output = p.stdout.read().decode('UTF-8')
     # output = output[2:-1] # Remove b' and ' from string added by python
     #print(output)
@@ -80,29 +81,31 @@ def getGPUs():
         #print(line)
         vals = line.split(', ')
         #print(vals)
-        for i in range(10):
+        for i in range(11):
             # print(vals[i])
             if (i == 0):
                 deviceIds[g] = int(vals[i])
             elif (i == 1):
-                gpuUtil[g] = safeFloatCast(vals[i])/100
+                uuid = vals[i]
             elif (i == 2):
-                memTotal[g] = safeFloatCast(vals[i])
+                gpuUtil[g] = safeFloatCast(vals[i])/100
             elif (i == 3):
-                memUsed[g] = safeFloatCast(vals[i])
+                memTotal[g] = safeFloatCast(vals[i])
             elif (i == 4):
-                memFree[g] = safeFloatCast(vals[i])
+                memUsed[g] = safeFloatCast(vals[i])
             elif (i == 5):
-                driver = vals[i]
+                memFree[g] = safeFloatCast(vals[i])
             elif (i == 6):
-                gpu_name = vals[i]
+                driver = vals[i]
             elif (i == 7):
-                serial = vals[i]
+                gpu_name = vals[i]
             elif (i == 8):
-                display_active = vals[i]
+                serial = vals[i]
             elif (i == 9):
+                display_active = vals[i]
+            elif (i == 10):
                 display_mode = vals[i]
-        GPUs.append(GPU(deviceIds[g], gpuUtil[g], memTotal[g], memUsed[g], memFree[g], driver, gpu_name, serial, display_mode, display_active))
+        GPUs.append(GPU(deviceIds[g], uuid, gpuUtil[g], memTotal[g], memUsed[g], memFree[g], driver, gpu_name, serial, display_mode, display_active))
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
 
@@ -115,7 +118,7 @@ def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, inc
     # limit = 1 (DEFAULT), 2, ..., Inf
     #     Limit sets the upper limit for the number of GPUs to return. E.g. if limit = 2, but only one is available, only one is returned.
 
-    # Get devise IDs, load and memory usage
+    # Get device IDs, load and memory usage
     GPUs = getGPUs()
 
     # Determine, which GPUs are available
@@ -135,13 +138,13 @@ def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, inc
         GPUs.sort(key=lambda x: np.Inf if np.isnan(x.load) else x.load, reverse=False)
     elif (order == 'memory'):
         GPUs.sort(key=lambda x: np.Inf if np.isnan(x.memoryUtil) else x.memoryUtil, reverse=False)
-        
+
     # Extract the number of desired GPUs, but limited to the total number of available GPUs
     GPUs = GPUs[0:min(limit, len(GPUs))]
 
     # Extract the device IDs from the GPUs and return them
     deviceIds = [gpu.id for gpu in GPUs]
-    
+
     return deviceIds
 
 #def getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5, includeNan = False):
@@ -152,7 +155,7 @@ def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, inc
 #            GPUavailability[i] = 1
 
 def getAvailability(GPUs, maxLoad=0.5, maxMemory=0.5, includeNan = False):
-    # Determine, which GPUs are available           
+    # Determine, which GPUs are available
     GPUavailability = [1 if (gpu.load < maxLoad or (includeNan and np.isnan(gpu.load))) and (gpu.memoryUtil < maxMemory  or (includeNan and np.isnan(gpu.memoryUtil))) else 0 for gpu in GPUs]
     return GPUavailability
 
@@ -163,7 +166,7 @@ def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, i
     #    if (GPUs[i].load < maxLoad) & (GPUs[i].memory < maxMemory):
     #        firstAvailableGPU = GPUs[i].id
     #        break
-    #return firstAvailableGPU       
+    #return firstAvailableGPU
     for i in range(attempts):
         if (verbose):
             print('Attempting (' + str(i+1) + '/' + str(attempts) + ') to locate available GPU.')
