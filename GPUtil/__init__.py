@@ -109,7 +109,7 @@ def getGPUs():
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
 
-def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, includeNan = False):
+def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, includeNan=False, excludeID=[], excludeUUID=[]):
     # order = first | last | random | load | memory
     #    first --> select the GPU with the lowest ID (DEFAULT)
     #    last --> select the GPU with the highest ID
@@ -122,7 +122,7 @@ def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, inc
     GPUs = getGPUs()
 
     # Determine, which GPUs are available
-    GPUavailability = np.array(getAvailability(GPUs, maxLoad = maxLoad, maxMemory = maxMemory, includeNan = includeNan))
+    GPUavailability = np.array(getAvailability(GPUs, maxLoad=maxLoad, maxMemory=maxMemory, includeNan=includeNan, excludeID=excludeID, excludeUUID=excludeUUID))
     availAbleGPUindex = np.where(GPUavailability == 1)[0]
     # Discard unavailable GPUs
     GPUs = [GPUs[g] for g in availAbleGPUindex]
@@ -154,12 +154,12 @@ def getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, inc
 #        if (GPUs[i].load < maxLoad or (includeNan and np.isnan(GPUs[i].load))) and (GPUs[i].memoryUtil < maxMemory  or (includeNan and np.isnan(GPUs[i].memoryUtil))):
 #            GPUavailability[i] = 1
 
-def getAvailability(GPUs, maxLoad=0.5, maxMemory=0.5, includeNan = False):
+def getAvailability(GPUs, maxLoad=0.5, maxMemory=0.5, includeNan=False, excludeID=[], excludeUUID=[]):
     # Determine, which GPUs are available
-    GPUavailability = [1 if (gpu.load < maxLoad or (includeNan and np.isnan(gpu.load))) and (gpu.memoryUtil < maxMemory  or (includeNan and np.isnan(gpu.memoryUtil))) else 0 for gpu in GPUs]
+    GPUavailability = [1 if (gpu.load < maxLoad or (includeNan and np.isnan(gpu.load))) and (gpu.memoryUtil < maxMemory  or (includeNan and np.isnan(gpu.memoryUtil))) and ((gpu.id not in excludeID) and (gpu.uuid not in excludeUUID)) else 0 for gpu in GPUs]
     return GPUavailability
 
-def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False, includeNan = False):
+def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False, includeNan=False, excludeID=[], excludeUUID=[]):
     #GPUs = getGPUs()
     #firstAvailableGPU = np.NaN
     #for i in range(len(GPUs)):
@@ -171,7 +171,7 @@ def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, i
         if (verbose):
             print('Attempting (' + str(i+1) + '/' + str(attempts) + ') to locate available GPU.')
         # Get first available GPU
-        available = getAvailable(order = order, limit = 1, maxLoad = maxLoad, maxMemory = maxMemory, includeNan = includeNan)
+        available = getAvailable(order=order, limit=1, maxLoad=maxLoad, maxMemory=maxMemory, includeNan=includeNan, excludeID=excludeID, excludeUUID=excludeUUID)
         # If an available GPU was found, break for loop.
         if (available):
             if (verbose):
@@ -188,7 +188,7 @@ def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, i
     return available
 
 
-def showUtilization(all=False,attrList=None,useOldCode=False):
+def showUtilization(all=False, attrList=None, useOldCode=False):
     GPUs = getGPUs()
     if (all):
         if (useOldCode):
