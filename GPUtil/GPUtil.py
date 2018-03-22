@@ -35,6 +35,8 @@ import os
 import numpy as np
 import time
 
+__version__ = '1.3.0.dev01'
+
 class GPU:
     def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active):
         self.id = ID

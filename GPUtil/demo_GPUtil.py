@@ -3,6 +3,8 @@ import GPUtil as GPU
 # Get all device ids and their processing and memory utiliazion
 # (deviceIds, gpuUtil, memUtil) = GPU.getGPUs()
 
+# Print package name and version number
+print(GPU.__name__ + ' ' + GPU.__version__)
 
 # Show the utilization of all GPUs in a nice table
 GPU.showUtilization()
