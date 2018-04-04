@@ -205,6 +205,9 @@ Below is a minimum working example for selecting the first available GPU with GP
 import caffe
 import GPUtil
 
+# Set CUDA_DEVICE_ORDER so the IDs assigned by CUDA match those from nvidia-smi
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+
 # Get the first available GPU
 DEVICE_ID_LIST = GPUtil.getFirstAvailable()
 DEVICE_ID = DEVICE_ID_LIST[0] # grab first element from list
@@ -234,6 +237,9 @@ To run the code, copy it into a new python file (e.g. `demo_tensorflow_gputil.py
 import os
 import tensorflow as tf
 import GPUtil
+
+# Set CUDA_DEVICE_ORDER so the IDs assigned by CUDA match those from nvidia-smi
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 
 # Get the first available GPU
 DEVICE_ID_LIST = GPUtil.getFirstAvailable()
