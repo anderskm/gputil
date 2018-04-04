@@ -9,11 +9,11 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 1. [Requirements](#requirements)
 1. [Installation](#installation)
 1. [Usage](#usage)
-  1. [Main functions](#main-functions)
-  1. [Helper functions](#helper-functions)
+   1. [Main functions](#main-functions)
+   1. [Helper functions](#helper-functions)
 1. [Examples](#examples)
-  1. [Select first available GPU in Caffe](#select-first-available-gpu-in-caffe)
-  1. [Occupy only 1 GPU in TensorFlow](#occupy-only-1-gpu-in-tensorflow)
+   1. [Select first available GPU in Caffe](#select-first-available-gpu-in-caffe)
+   1. [Occupy only 1 GPU in TensorFlow](#occupy-only-1-gpu-in-tensorflow)
 1. [License](#license)
 
 ## Requirements
@@ -95,7 +95,7 @@ Once included all functions are available. The functions along with a short desc
 ### Main functions
 
 ```python
-deviceIDs = GPUtil.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5)
+deviceIDs = GPUtil.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, ignoreNan=False, excludeID=[], excludeUUID=[])
 ```
 Returns a list ids of available GPUs. Availablity is determined based on current memory usage and load. The order, maximum number of devices, their maximum load and maximum memory consumption are determined by the input arguments.
 
@@ -109,6 +109,9 @@ Returns a list ids of available GPUs. Availablity is determined based on current
   * `limit` - limits the number of GPU device ids returned to the specified number. Must be positive integer. (**default = 1**)
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
+  * `includeNan` - True/false flag indicating whether to include GPUs where either load or memory usage is NaN (indicating usage could not be retrieved). (**default = False**)
+  * `excludeID` - List of IDs, which should be excluded from the list of available GPUs. See `GPU` class description. (**default = []**)
+  * `excludeUUID` - Same as `excludeID` except it uses the UUID. (**default = []**)
 * Outputs
   * deviceIDs - list of all available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The list is ordered according to `order`. The maximum number of returned device ids is limted by `limit`.
 
@@ -126,20 +129,42 @@ When using the default values, it is the same as `getAvailable(order = 'first', 
   * `attempts` - Number of attempts the function should make before giving up finding an available GPU. (**default = 1**)
   * `interval` - Interval in seconds between each attempt to find an available GPU. (**default = 900** --> 15 mins)
   * `verbose` - If `True`, prints the attempt number before each attempt and the GPU id if an available is found.
+  * `includeNan` - See the description for `GPUtil.getAvailable(...)`. (**default = False**)
+  * `excludeID` - See the description for `GPUtil.getAvailable(...)`. (**default = []**)
+  * `excludeUUID` - See the description for `GPUtil.getAvailable(...)`. (**default = []**)
 * Outputs
   * deviceID - list with 1 element containing the first available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The order and limit are fixed to `'first'` and `1`, respectively.
 
 
 ```python
-GPUtil.showUtilization()
+GPUtil.showUtilization(all=False, attrList=None, useOldCode=False)
 ```
-Prints the current status (id, memory usage and load) of all GPUs
+Prints the current status (id, memory usage, uuid load) of all GPUs
 * Inputs
-  * _None_
+  * `all` - True/false flag indicating if all info on the GPUs should be shown. Overwrites `attrList`.
+  * `attrList` - List of lists of `GPU` attributes to display. See code for more information/example.
+  * `useOldCode` - True/false flag indicating if the old code to display GPU utilization should be used.
 * Outputs
   * _None_
 
 ### Helper functions
+```python
+ class GPU
+```
+Helper class handle the attributes of each GPU. Quoted descriptions are copied from corresponding descriptions by nvidia-smi.
+* Attributes for each `GPU`
+  * `id` - "Zero based index of the GPU. Can change at each boot."
+  * `uuid` - "This value is the globally unique immutable alphanumeric identifier of the GPU. It does not correspond to any physical label on the board. Does not change across reboots."
+  * `load` - Relative GPU load. 0 to 1 (100%, full load). "Percent of time over the past sample period during which one or more kernels was executing on the GPU. The sample period may be between 1 second and 1/6 second depending on the product."
+  * `memoryUtil` - Relative memory usage from 0 to 1 (100%, full usage). "Percent of time over the past sample period during which global (device) memory was being read or written. The sample period may be between 1 second and 1/6 second depending on the product."
+  * `memoryTotal` - "Total installed GPU memory."
+  * `memoryUsed` - "Total GPU memory allocated by active contexts."
+  * `memoryFree` - "Total free GPU memory."
+  * `driver` - "The version of the installed NVIDIA display driver."
+  * `name` - "The official product name of the GPU."
+  * `serial` - This number matches the serial number physically printed on each board. It is a globally unique immutable alphanumeric value.
+  * `display_mode` - "A flag that indicates whether a physical display (e.g. monitor) is currently connected to any of the GPU's connectors. "Enabled" indicates an attached display. "Disabled" indicates otherwise."
+  * `display_active` - "A flag that indicates whether a display is initialized on the GPU's (e.g. memory is allocated on the device for display). Display can be active even when no monitor is physically attached. "Enabled" indicates an active display. "Disabled" indicates otherwise."
 
 ```python
 GPUs = GPUtil.getGPUs()
@@ -150,7 +175,7 @@ GPUs = GPUtil.getGPUs()
   * `GPUs` - list of all GPUs. Each `GPU` corresponds to one GPU in the computer and contains a device id, relative load and relative memory usage.
 
 ```python
-GPUavailability = GPUtil.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5)
+GPUavailability = GPUtil.getAvailability(GPUs, maxLoad = 0.5, maxMemory = 0.5, includeNan=False, excludeID=[], excludeUUID=[])
 ```
 Given a list of `GPUs` (see `GPUtil.getGPUs()`), return a equally sized list of ones and zeroes indicating which corresponding GPUs are available.
 
@@ -158,6 +183,9 @@ Given a list of `GPUs` (see `GPUtil.getGPUs()`), return a equally sized list of 
   * `GPUs` - List of `GPUs`. See `GPUtil.getGPUs()`
   * `maxLoad` - Maximum current relative load for a GPU to be considered available. GPUs with a load larger than `maxLoad` is not returned. (**default = 0.5**)
   * `maxMemory` - Maximum current relative memory usage for a GPU to be considered available. GPUs with a current memory usage larger than `maxMemory` is not returned. (**default = 0.5**)
+  * `includeNan` - See the description for `GPUtil.getAvailable(...)`. (**default = False**)
+  * `excludeID` - See the description for `GPUtil.getAvailable(...)`. (**default = []**)
+  * `excludeUUID` - See the description for `GPUtil.getAvailable(...)`. (**default = []**)
 * Outputs
   * GPUavailability - binary list indicating if `GPUs` are available or not. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively.
 
