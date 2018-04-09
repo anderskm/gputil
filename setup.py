@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
       name = 'GPUtil',
       packages = ['GPUtil'],
-      version = '1.2.3',
+      version = '1.3.0',
       description = 'GPUtil is a Python module for getting the GPU status from NVIDA GPUs using nvidia-smi.',
       author = 'Anders Krogh Mortensen',
       author_email = 'anderskroghm@gmail.com',
