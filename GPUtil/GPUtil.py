@@ -35,7 +35,7 @@ import os
 import numpy as np
 import time
 
-__version__ = '1.3.0'
+__version__ = '1.3.1-dev'
 
 class GPU:
     def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active):
@@ -61,9 +61,12 @@ def safeFloatCast(strNumber):
 
 def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
-    p = Popen(["nvidia-smi","--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode", "--format=csv,noheader,nounits"], stdout=PIPE)
-    stdout, stderror = p.communicate()
-    output = stdout.read().decode('UTF-8')
+    try:
+        p = Popen(["nvidia-smi","--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode", "--format=csv,noheader,nounits"], stdout=PIPE)
+        stdout, stderror = p.communicate()
+    except:
+        return []
+    output = stdout.decode('UTF-8')
     # output = output[2:-1] # Remove b' and ' from string added by python
     #print(output)
     ## Parse output
