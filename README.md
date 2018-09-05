@@ -14,6 +14,7 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 1. [Examples](#examples)
    1. [Select first available GPU in Caffe](#select-first-available-gpu-in-caffe)
    1. [Occupy only 1 GPU in TensorFlow](#occupy-only-1-gpu-in-tensorflow)
+   1. [Monitor GPU in a separate thread](#monitor-gpu-in-a-separate-thread)
 1. [License](#license)
 
 ## Requirements
@@ -344,6 +345,37 @@ I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow devi
 I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:2) -> (device: 2, name: TITAN X (Pascal), pci bus id: 0000:83:00.0)
 I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:3) -> (device: 3, name: TITAN X (Pascal), pci bus id: 0000:84:00.0)
 a+b=42
+```
+
+### Monitor GPU in a separate thread
+If using GPUtil to monitor GPUs during training, it may show 0% utilization. A way around this is to use a separate monitoring thread.
+```python
+import GPUtil
+from threading import Thread
+import time
+
+class Monitor(Thread):
+    def __init__(self, delay):
+        super(Monitor, self).__init__()
+        self.stopped = False
+        self.delay = delay # Time between calls to GPUtil
+        self.start()
+
+    def run(self):
+        while not self.stopped:
+            GPUtil.showUtilization()
+            time.sleep(self.delay)
+
+    def stop(self):
+        self.stopped = True
+        
+# Instantiate monitor with a 10-second delay between updates
+monitor = Monitor(10)
+
+# Train, etc.
+
+# Close monitor
+monitor.stop()
 ```
 
 ## License
