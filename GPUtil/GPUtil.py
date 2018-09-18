@@ -39,7 +39,7 @@ import sys
 __version__ = '1.3.1-dev'
 
 class GPU:
-    def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active):
+    def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu):
         self.id = ID
         self.uuid = uuid
         self.load = load
@@ -52,6 +52,7 @@ class GPU:
         self.serial = serial
         self.display_mode = display_mode
         self.display_active = display_active
+        self.temperature = temp_gpu
 
 def safeFloatCast(strNumber):
     try:
@@ -63,7 +64,7 @@ def safeFloatCast(strNumber):
 def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
     try:
-        p = Popen(["nvidia-smi","--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode", "--format=csv,noheader,nounits"], stdout=PIPE)
+        p = Popen(["nvidia-smi","--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
         stdout, stderror = p.communicate()
     except:
         return []
@@ -87,7 +88,7 @@ def getGPUs():
         #print(line)
         vals = line.split(', ')
         #print(vals)
-        for i in range(11):
+        for i in range(12):
             # print(vals[i])
             if (i == 0):
                 deviceIds[g] = int(vals[i])
@@ -111,7 +112,9 @@ def getGPUs():
                 display_active = vals[i]
             elif (i == 10):
                 display_mode = vals[i]
-        GPUs.append(GPU(deviceIds[g], uuid, gpuUtil[g], memTotal[g], memUsed[g], memFree[g], driver, gpu_name, serial, display_mode, display_active))
+            elif (i == 11):
+                temp_gpu = safeFloatCast(vals[i]);
+        GPUs.append(GPU(deviceIds[g], uuid, gpuUtil[g], memTotal[g], memUsed[g], memFree[g], driver, gpu_name, serial, display_mode, display_active, temp_gpu))
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
 
@@ -207,7 +210,8 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                          {'attr':'name','name':'Name'},
                          {'attr':'serial','name':'Serial'},
                          {'attr':'uuid','name':'UUID'}],
-                        [{'attr':'load','name':'GPU util.','suffix':'%','transform': lambda x: x*100,'precision':0},
+                        [{'attr':'temperature','name':'GPU temp.','suffix':'C','transform': lambda x: x,'precision':0},
+						 {'attr':'load','name':'GPU util.','suffix':'%','transform': lambda x: x*100,'precision':0},
                          {'attr':'memoryUtil','name':'Memory util.','suffix':'%','transform': lambda x: x*100,'precision':0}],
                         [{'attr':'memoryTotal','name':'Memory total','suffix':'MB','precision':0},
                          {'attr':'memoryUsed','name':'Memory used','suffix':'MB','precision':0},
