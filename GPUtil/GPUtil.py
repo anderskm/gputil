@@ -248,6 +248,8 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         
                         if (isinstance(attr,float)):
                             attrStr = ('{0:' + attrPrecision + 'f}').format(attr)
+                        elif (isinstance(attr,np.int32)):
+                            attrStr = ('{0:d}').format(attr)
                         elif (isinstance(attr,np.int64)):
                             attrStr = ('{0:d}').format(attr)
                         elif (isinstance(attr,str)):
@@ -273,6 +275,8 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         
                         if (isinstance(attr,float)):
                             attrStr = ('{0:'+ minWidthStr + attrPrecision + 'f}').format(attr)
+                        elif (isinstance(attr,np.int32)):
+                            attrStr = ('{0:' + minWidthStr + 'd}').format(attr)
                         elif (isinstance(attr,np.int64)):
                             attrStr = ('{0:' + minWidthStr + 'd}').format(attr)
                         elif (isinstance(attr,str)):
