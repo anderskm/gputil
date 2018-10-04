@@ -32,7 +32,8 @@
 
 from subprocess import Popen, PIPE
 import os
-import numpy as np
+import math
+import random
 import time
 import sys
 
@@ -76,12 +77,6 @@ def getGPUs():
     lines = output.split(os.linesep)
     #print(lines)
     numDevices = len(lines)-1
-    deviceIds = np.empty(numDevices,dtype=int)
-    gpuUtil = np.empty(numDevices,dtype=float)
-    memTotal = np.empty(numDevices,dtype=float)
-    memUsed = np.empty(numDevices,dtype=float)
-    memFree = np.empty(numDevices,dtype=float)
-    driver = []
     GPUs = []
     for g in range(numDevices):
         line = lines[g]
@@ -91,17 +86,17 @@ def getGPUs():
         for i in range(12):
             # print(vals[i])
             if (i == 0):
-                deviceIds[g] = int(vals[i])
+                deviceIds = int(vals[i])
             elif (i == 1):
                 uuid = vals[i]
             elif (i == 2):
-                gpuUtil[g] = safeFloatCast(vals[i])/100
+                gpuUtil = safeFloatCast(vals[i])/100
             elif (i == 3):
-                memTotal[g] = safeFloatCast(vals[i])
+                memTotal = safeFloatCast(vals[i])
             elif (i == 4):
-                memUsed[g] = safeFloatCast(vals[i])
+                memUsed = safeFloatCast(vals[i])
             elif (i == 5):
-                memFree[g] = safeFloatCast(vals[i])
+                memFree = safeFloatCast(vals[i])
             elif (i == 6):
                 driver = vals[i]
             elif (i == 7):
@@ -114,7 +109,7 @@ def getGPUs():
                 display_mode = vals[i]
             elif (i == 11):
                 temp_gpu = safeFloatCast(vals[i]);
-        GPUs.append(GPU(deviceIds[g], uuid, gpuUtil[g], memTotal[g], memUsed[g], memFree[g], driver, gpu_name, serial, display_mode, display_active, temp_gpu))
+        GPUs.append(GPU(deviceIds, uuid, gpuUtil, memTotal, memUsed, memFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu))
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
 
@@ -131,22 +126,22 @@ def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, includeNa
     GPUs = getGPUs()
 
     # Determine, which GPUs are available
-    GPUavailability = np.array(getAvailability(GPUs, maxLoad=maxLoad, maxMemory=maxMemory, includeNan=includeNan, excludeID=excludeID, excludeUUID=excludeUUID))
-    availAbleGPUindex = np.where(GPUavailability == 1)[0]
+    GPUavailability = getAvailability(GPUs, maxLoad=maxLoad, maxMemory=maxMemory, includeNan=includeNan, excludeID=excludeID, excludeUUID=excludeUUID)
+    availAbleGPUindex = [idx for idx in range(0,len(GPUavailability)) if (GPUavailability[idx] == 1)]
     # Discard unavailable GPUs
     GPUs = [GPUs[g] for g in availAbleGPUindex]
 
     # Sort available GPUs according to the order argument
     if (order == 'first'):
-        GPUs.sort(key=lambda x: np.Inf if np.isnan(x.id) else x.id, reverse=False)
+        GPUs.sort(key=lambda x: float('inf') if math.isnan(x.id) else x.id, reverse=False)
     elif (order == 'last'):
-        GPUs.sort(key=lambda x: -np.Inf if np.isnan(x.id) else x.id, reverse=True)
+        GPUs.sort(key=lambda x: float('-inf') if math.isnan(x.id) else x.id, reverse=True)
     elif (order == 'random'):
-        GPUs = [GPUs[g] for g in np.random.permutation(range(len(GPUs)))]
+        GPUs = [GPUs[g] for g in random.sample(range(0,len(GPUs)),len(GPUs))]
     elif (order == 'load'):
-        GPUs.sort(key=lambda x: np.Inf if np.isnan(x.load) else x.load, reverse=False)
+        GPUs.sort(key=lambda x: float('inf') if math.isnan(x.load) else x.load, reverse=False)
     elif (order == 'memory'):
-        GPUs.sort(key=lambda x: np.Inf if np.isnan(x.memoryUtil) else x.memoryUtil, reverse=False)
+        GPUs.sort(key=lambda x: float('inf') if math.isnan(x.memoryUtil) else x.memoryUtil, reverse=False)
 
     # Extract the number of desired GPUs, but limited to the total number of available GPUs
     GPUs = GPUs[0:min(limit, len(GPUs))]
@@ -165,7 +160,7 @@ def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, includeNa
 
 def getAvailability(GPUs, maxLoad=0.5, maxMemory=0.5, includeNan=False, excludeID=[], excludeUUID=[]):
     # Determine, which GPUs are available
-    GPUavailability = [1 if (gpu.load < maxLoad or (includeNan and np.isnan(gpu.load))) and (gpu.memoryUtil < maxMemory  or (includeNan and np.isnan(gpu.memoryUtil))) and ((gpu.id not in excludeID) and (gpu.uuid not in excludeUUID)) else 0 for gpu in GPUs]
+    GPUavailability = [1 if (gpu.load < maxLoad or (includeNan and math.isnan(gpu.load))) and (gpu.memoryUtil < maxMemory  or (includeNan and math.isnan(gpu.memoryUtil))) and ((gpu.id not in excludeID) and (gpu.uuid not in excludeUUID)) else 0 for gpu in GPUs]
     return GPUavailability
 
 def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False, includeNan=False, excludeID=[], excludeUUID=[]):
@@ -252,9 +247,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         
                         if (isinstance(attr,float)):
                             attrStr = ('{0:' + attrPrecision + 'f}').format(attr)
-                        elif (isinstance(attr,np.int32)):
-                            attrStr = ('{0:d}').format(attr)
-                        elif (isinstance(attr,np.int64)):
+                        elif (isinstance(attr,int)):
                             attrStr = ('{0:d}').format(attr)
                         elif (isinstance(attr,str)):
                             attrStr = attr;
@@ -266,9 +259,9 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                                             
                         attrStr += attrSuffix
                         
-                        minWidth = np.maximum(minWidth,len(attrStr))
+                        minWidth = max(minWidth,len(attrStr))
     
-                    headerString += ' '*np.maximum(0,minWidth-headerWidth)
+                    headerString += ' '*max(0,minWidth-headerWidth)
                     
                     minWidthStr = str(minWidth - len(attrSuffix))
                     
@@ -279,9 +272,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         
                         if (isinstance(attr,float)):
                             attrStr = ('{0:'+ minWidthStr + attrPrecision + 'f}').format(attr)
-                        elif (isinstance(attr,np.int32)):
-                            attrStr = ('{0:' + minWidthStr + 'd}').format(attr)
-                        elif (isinstance(attr,np.int64)):
+                        elif (isinstance(attr,int)):
                             attrStr = ('{0:' + minWidthStr + 'd}').format(attr)
                         elif (isinstance(attr,str)):
                             attrStr = ('{0:' + minWidthStr + 's}').format(attr);
