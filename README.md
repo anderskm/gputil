@@ -24,8 +24,9 @@ GPUtil uses the program `nvidia-smi` to get the GPU status of all available CUDA
 Supports both Python 2.X and 3.X.
 
 Python libraries:
-* [numpy](http://www.numpy.org/)
 * subprocess ([The Python Standard Library](https://docs.python.org/3/library/subprocess.html))
+* math ([The Python Standard Library](https://docs.python.org/3/library/math.html))
+* random ([The Python Standard Library](https://docs.python.org/3/library/random.html))
 * time ([The Python Standard Library](https://docs.python.org/3/library/time.html))
 * os ([The Python Standard Library](https://docs.python.org/3/library/os.html))
 * sys ([The Python Standard Library](https://docs.python.org/3/library/sys.html))
