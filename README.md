@@ -31,7 +31,7 @@ Python libraries:
 * os ([The Python Standard Library](https://docs.python.org/3/library/os.html))
 * sys ([The Python Standard Library](https://docs.python.org/3/library/sys.html))
 
-Tested on CUDA driver version 367.57 and 375.26 with Python 3.5.2 and 3.5.4.
+Tested on CUDA driver version 390.77 Python 2.7 and 3.5.
 
 ## Installation
 
