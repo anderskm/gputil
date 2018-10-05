@@ -149,6 +149,17 @@ Prints the current status (id, memory usage, uuid load) of all GPUs
   * `useOldCode` - True/false flag indicating if the old code to display GPU utilization should be used.
 * Outputs
   * _None_
+  
+```python
+GPUtil.writeUtilization(delay=2, count=1)
+```
+Writes the current status (id, memory usage, uuid load) of all GPUs to a csv file.
+
+* Inputs
+  * `delay` - How long to wait after having gathered GPU data before doing it again.
+  * `count` - How many times to gather data from the GPU.
+* Outputs
+  * _None_
 
 ### Helper functions
 ```python
