@@ -337,10 +337,20 @@ def writeUtilization(delay=2, count=1):
 
             for attrDict in attrGroup:
 
+                attrTransform = attrDict['transform'] if ('transform' in attrDict.keys()) else lambda x: x
+
                 for gpuIdx, gpu in enumerate(GPUs):
                     attr = getattr(gpu, attrDict['attr'])
 
-                    attrStr = str(attr)
+                    attr = attrTransform(attr)
+
+                    if isinstance(attr, float):
+                        attrStr = '%.2f' % attr
+                    elif isinstance(attr, int):
+                        attrStr = str(attr)
+                    else:
+                        raise TypeError('Unhandled object type (' + str(type(attr)) + ') for attribute \'' + attrDict[
+                            'name'] + '\'')
 
                     GPUstrings[gpuIdx] += attrStr + ','
 
