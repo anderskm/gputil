@@ -1,7 +1,7 @@
 # GPUtil
 `GPUtil` is a Python module for getting the GPU status from NVIDA GPUs using `nvidia-smi`.
 `GPUtil` locates all GPUs on the computer, determines their availablity and returns a ordered list of available GPUs.
-Availablity is based opun the current memory consumption and load of each GPU.
+Availablity is based upon the current memory consumption and load of each GPU.
 The module is written with GPU selection for Deep Learning in mind, but it is not task/library specific and it can be applied to any task, where it may be useful to identify available GPUs.
 
 **Table of Contents**
@@ -87,7 +87,7 @@ Tested on CUDA driver version 390.77 Python 2.7 and 3.5.
 
 ## Usage
 
-To include `GPUtil` in our Python code, all you hve to do is included it at the beginning of your script:
+To include `GPUtil` in your Python code, all you hve to do is included it at the beginning of your script:
 
 ```python
 import GPUtil
@@ -103,7 +103,7 @@ deviceIDs = GPUtil.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMe
 Returns a list ids of available GPUs. Availablity is determined based on current memory usage and load. The order, maximum number of devices, their maximum load and maximum memory consumption are determined by the input arguments.
 
 * Inputs
-  * `order` - Deterimes the order in which the available GPU device ids are returned. `order` should be specified as one of the following strings:
+  * `order` - Deterimines the order in which the available GPU device ids are returned. `order` should be specified as one of the following strings:
     * `'first'` - orders available GPU device ids by ascending id (**defaut**)
     * `'last'` - orders available GPU device ids by descending id
     * `'random'` - orders the available GPU device ids randomly
@@ -116,7 +116,7 @@ Returns a list ids of available GPUs. Availablity is determined based on current
   * `excludeID` - List of IDs, which should be excluded from the list of available GPUs. See `GPU` class description. (**default = []**)
   * `excludeUUID` - Same as `excludeID` except it uses the UUID. (**default = []**)
 * Outputs
-  * deviceIDs - list of all available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The list is ordered according to `order`. The maximum number of returned device ids is limted by `limit`.
+  * deviceIDs - list of all available GPU device ids. A GPU is considered available, if the current load and memory usage is less than `maxLoad` and `maxMemory`, respectively. The list is ordered according to `order`. The maximum number of returned device ids is limited by `limit`.
 
 ```python
 deviceID = GPUtil.getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False)
