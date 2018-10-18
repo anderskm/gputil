@@ -18,8 +18,8 @@ The module is written with GPU selection for Deep Learning in mind, but it is no
 1. [License](#license)
 
 ## Requirements
-CUDA GPU with latest CUDA driver installed.
-GPUtil uses the program `nvidia-smi` to get the GPU status of all available CUDA GPUs. `nvidia-smi` should be installed automatically, when you install your CUDA driver.
+NVIDIA GPU with latest NVIDIA driver installed.
+GPUtil uses the program `nvidia-smi` to get the GPU status of all available NVIDIA GPUs. `nvidia-smi` should be installed automatically, when you install your NVIDIA driver.
 
 Supports both Python 2.X and 3.X.
 
@@ -154,7 +154,7 @@ Prints the current status (id, memory usage, uuid load) of all GPUs
 ```python
  class GPU
 ```
-Helper class handle the attributes of each GPU. Quoted descriptions are copied from corresponding descriptions by nvidia-smi.
+Helper class handle the attributes of each GPU. Quoted descriptions are copied from corresponding descriptions by `nvidia-smi`.
 * Attributes for each `GPU`
   * `id` - "Zero based index of the GPU. Can change at each boot."
   * `uuid` - "This value is the globally unique immutable alphanumeric identifier of the GPU. It does not correspond to any physical label on the board. Does not change across reboots."
