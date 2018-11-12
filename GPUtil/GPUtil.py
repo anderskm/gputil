@@ -31,11 +31,14 @@
 # SOFTWARE.
 
 from subprocess import Popen, PIPE
+from distutils import spawn
 import os
 import math
 import random
 import time
 import sys
+import platform
+
 
 __version__ = '1.3.1-dev'
 
@@ -63,9 +66,19 @@ def safeFloatCast(strNumber):
     return number
 
 def getGPUs():
+    if platform.system() == "Windows":
+	# If the platform is Windows and nvidia-smi 
+	# could not be found from the environment path, 
+	# try to find it from system drive with default installation path
+	nvidia_smi = spawn.find_executable('nvidia-smi')
+	if nvidia_smi is None:
+	    nvidia_smi = "%s\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe" % os.environ['systemdrive']
+    else:
+        nvidia_smi = "nvidia-smi"
+	
     # Get ID, processing and memory utilization for all GPUs
     try:
-        p = Popen(["nvidia-smi","--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
+        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
         stdout, stderror = p.communicate()
     except:
         return []
