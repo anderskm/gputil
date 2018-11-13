@@ -25,11 +25,13 @@ Supports both Python 2.X and 3.X.
 
 Python libraries:
 * subprocess ([The Python Standard Library](https://docs.python.org/3/library/subprocess.html))
+* distutils ([The Python Standard Library](https://docs.python.org/3/library/distutils.html))
 * math ([The Python Standard Library](https://docs.python.org/3/library/math.html))
 * random ([The Python Standard Library](https://docs.python.org/3/library/random.html))
 * time ([The Python Standard Library](https://docs.python.org/3/library/time.html))
 * os ([The Python Standard Library](https://docs.python.org/3/library/os.html))
 * sys ([The Python Standard Library](https://docs.python.org/3/library/sys.html))
+* platform ([The Python Standard Library](https://docs.python.org/3/library/platform.html))
 
 Tested on CUDA driver version 390.77 Python 2.7 and 3.5.
 
