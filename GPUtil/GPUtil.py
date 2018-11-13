@@ -67,12 +67,12 @@ def safeFloatCast(strNumber):
 
 def getGPUs():
     if platform.system() == "Windows":
-	# If the platform is Windows and nvidia-smi 
-	# could not be found from the environment path, 
-	# try to find it from system drive with default installation path
-	nvidia_smi = spawn.find_executable('nvidia-smi')
-	if nvidia_smi is None:
-	    nvidia_smi = "%s\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe" % os.environ['systemdrive']
+        # If the platform is Windows and nvidia-smi 
+        # could not be found from the environment path, 
+        # try to find it from system drive with default installation path
+        nvidia_smi = spawn.find_executable('nvidia-smi')
+    if nvidia_smi is None:
+        nvidia_smi = "%s\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe" % os.environ['systemdrive']
     else:
         nvidia_smi = "nvidia-smi"
 	
