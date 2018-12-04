@@ -40,7 +40,7 @@ import sys
 import platform
 
 
-__version__ = '1.3.1-dev'
+__version__ = '1.3.2-dev'
 
 class GPU:
     def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu):
@@ -71,8 +71,8 @@ def getGPUs():
         # could not be found from the environment path, 
         # try to find it from system drive with default installation path
         nvidia_smi = spawn.find_executable('nvidia-smi')
-    if nvidia_smi is None:
-        nvidia_smi = "%s\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe" % os.environ['systemdrive']
+        if nvidia_smi is None:
+            nvidia_smi = "%s\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe" % os.environ['systemdrive']
     else:
         nvidia_smi = "nvidia-smi"
 	
@@ -126,12 +126,13 @@ def getGPUs():
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
 
-def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, includeNan=False, excludeID=[], excludeUUID=[]):
+def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, memoryFree=0, includeNan=False, excludeID=[], excludeUUID=[]):
     # order = first | last | random | load | memory
     #    first --> select the GPU with the lowest ID (DEFAULT)
     #    last --> select the GPU with the highest ID
     #    random --> select a random available GPU
-    #    lowest --> select the GPU with the lowest load
+    #    load --> select the GPU with the lowest load
+    #    memory --> select the GPU with the most memory available
     # limit = 1 (DEFAULT), 2, ..., Inf
     #     Limit sets the upper limit for the number of GPUs to return. E.g. if limit = 2, but only one is available, only one is returned.
 
@@ -139,7 +140,7 @@ def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, includeNa
     GPUs = getGPUs()
 
     # Determine, which GPUs are available
-    GPUavailability = getAvailability(GPUs, maxLoad=maxLoad, maxMemory=maxMemory, includeNan=includeNan, excludeID=excludeID, excludeUUID=excludeUUID)
+    GPUavailability = getAvailability(GPUs, maxLoad=maxLoad, maxMemory=maxMemory, memoryFree=memoryFree, includeNan=includeNan, excludeID=excludeID, excludeUUID=excludeUUID)
     availAbleGPUindex = [idx for idx in range(0,len(GPUavailability)) if (GPUavailability[idx] == 1)]
     # Discard unavailable GPUs
     GPUs = [GPUs[g] for g in availAbleGPUindex]
@@ -171,9 +172,9 @@ def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, includeNa
 #        if (GPUs[i].load < maxLoad or (includeNan and np.isnan(GPUs[i].load))) and (GPUs[i].memoryUtil < maxMemory  or (includeNan and np.isnan(GPUs[i].memoryUtil))):
 #            GPUavailability[i] = 1
 
-def getAvailability(GPUs, maxLoad=0.5, maxMemory=0.5, includeNan=False, excludeID=[], excludeUUID=[]):
+def getAvailability(GPUs, maxLoad=0.5, maxMemory=0.5, memoryFree=0, includeNan=False, excludeID=[], excludeUUID=[]):
     # Determine, which GPUs are available
-    GPUavailability = [1 if (gpu.load < maxLoad or (includeNan and math.isnan(gpu.load))) and (gpu.memoryUtil < maxMemory  or (includeNan and math.isnan(gpu.memoryUtil))) and ((gpu.id not in excludeID) and (gpu.uuid not in excludeUUID)) else 0 for gpu in GPUs]
+    GPUavailability = [1 if (gpu.memoryFree>=memoryFree) and (gpu.load < maxLoad or (includeNan and math.isnan(gpu.load))) and (gpu.memoryUtil < maxMemory  or (includeNan and math.isnan(gpu.memoryUtil))) and ((gpu.id not in excludeID) and (gpu.uuid not in excludeUUID)) else 0 for gpu in GPUs]
     return GPUavailability
 
 def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, interval=900, verbose=False, includeNan=False, excludeID=[], excludeUUID=[]):
