@@ -296,7 +296,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
             for GPUstring in GPUstrings:
                 print(GPUstring)
 
-def check_filename(log_file):
+def _check_filename(log_file):
     """
     This function checks that the file to use as a log does not already exist
 
@@ -334,7 +334,7 @@ def writeUtilization(delay=2, count=1, all=False, log_file="gpu_log.csv"):
     :type log_file: string
     """
 
-    log_file = check_filename(log_file)
+    log_file = _check_filename(log_file)
 
     f = open(log_file, "w")
 

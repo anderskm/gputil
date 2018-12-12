@@ -151,13 +151,15 @@ Prints the current status (id, memory usage, uuid load) of all GPUs
   * _None_
   
 ```python
-GPUtil.writeUtilization(delay=2, count=1)
+GPUtil.writeUtilization(delay=2, count=1, all=False, log_file="gpu_log.csv")
 ```
 Writes the current status (id, memory usage, uuid load) of all GPUs to a csv file.
 
 * Inputs
   * `delay` - How long to wait after having gathered GPU data before doing it again.
   * `count` - How many times to gather data from the GPU.
+  * `all` - True/false flag indicating if all info on the GPUs should be shown.
+  * `log_file` - String to use as the file name for the file to which all the data will be logged.
 * Outputs
   * _None_
 
