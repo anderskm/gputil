@@ -40,7 +40,7 @@ import sys
 import platform
 
 
-__version__ = '1.3.2-dev'
+__version__ = '1.4.0'
 
 class GPU:
     def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu):
