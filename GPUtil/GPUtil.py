@@ -234,11 +234,6 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
             print('--------------')
             for gpu in GPUs:
                 print(' {0:2d} {1:3.0f}% {2:3.0f}%'.format(gpu.id, gpu.load*100, gpu.memoryUtil*100))
-        else:
-            attrList = [[{'attr':'id','name':'ID'},
-                         {'attr':'load','name':'GPU','suffix':'%','transform': lambda x: x*100,'precision':0},
-                         {'attr':'memoryUtil','name':'MEM','suffix':'%','transform': lambda x: x*100,'precision':0}],
-                        ]
         
     if (not useOldCode):
         if (attrList is not None):
