@@ -100,7 +100,7 @@ Once included all functions are available. The functions along with a short desc
 ### Main functions
 
 ```python
-deviceIDs = GPUtil.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, ignoreNan=False, excludeID=[], excludeUUID=[])
+deviceIDs = GPUtil.getAvailable(order = 'first', limit = 1, maxLoad = 0.5, maxMemory = 0.5, includeNan=False, excludeID=[], excludeUUID=[])
 ```
 Returns a list ids of available GPUs. Availablity is determined based on current memory usage and load. The order, maximum number of devices, their maximum load and maximum memory consumption are determined by the input arguments.
 
