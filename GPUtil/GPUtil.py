@@ -358,6 +358,7 @@ try:
     gpus = getGPUs()
     for gpu in gpus:
         gpuUuidToIdMap[gpu.uuid] = gpu.id
+    del gpus
 except:
     pass
 
