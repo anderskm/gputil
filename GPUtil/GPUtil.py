@@ -63,12 +63,13 @@ class GPU:
 
 
 class GPUProcess:
-    def __init__(self, pid, processName, gpuId, gpuUuid, gpuName):
+    def __init__(self, pid, processName, gpuId, gpuUuid, gpuName, usedMemory):
         self.pid = pid
         self.processName = processName
         self.gpuId = gpuId
         self.gpuUuid = gpuUuid
         self.gpuName = gpuName
+        self.usedMemory = usedMemory
 
     def __str__(self):
         return str(self.__dict__)
@@ -138,7 +139,7 @@ def getGPUProcesses():
 
     nvidia_smi = getNvidiaSmiCmd()
     try:
-        p = Popen([nvidia_smi,"--query-compute-apps=pid,process_name,gpu_uuid,gpu_name", "--format=csv,noheader,nounits"], stdout=PIPE)
+        p = Popen([nvidia_smi,"--query-compute-apps=pid,process_name,gpu_uuid,gpu_name,used_memory", "--format=csv,noheader,nounits"], stdout=PIPE)
         stdout, stderror = p.communicate()
     except:
         return []
@@ -160,10 +161,11 @@ def getGPUProcesses():
         processName = vals[1]
         gpuUuid = vals[2]
         gpuName = vals[3]
+        usedMemory = safeFloatCast(vals[4])
         gpuId = gpuUuidToIdMap[gpuUuid]
         if gpuId is None:
             gpuId = -1
-        processes.append(GPUProcess(pid, processName, gpuId, gpuUuid, gpuName))
+        processes.append(GPUProcess(pid, processName, gpuId, gpuUuid, gpuName,usedMemory))
     return processes
 
 
