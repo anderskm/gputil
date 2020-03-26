@@ -30,7 +30,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from subprocess import Popen, PIPE
 from distutils import spawn
 import os
 import math
@@ -38,6 +37,7 @@ import random
 import time
 import sys
 import platform
+import subprocess
 
 
 __version__ = '1.4.0'
@@ -98,17 +98,18 @@ def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
     nvidia_smi = getNvidiaSmiCmd()
     try:
-        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
-        stdout, stderror = p.communicate()
+        p = subprocess.run([
+            nvidia_smi,
+            "--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu",
+            "--format=csv,noheader,nounits"
+        ], stdout=subprocess.PIPE, encoding='utf8')
+        stdout, stderror = p.stdout, p.stderr
     except:
         return []
-    output = stdout.decode('UTF-8')
-    # output = output[2:-1] # Remove b' and ' from string added by python
-    #print(output)
+    output = stdout
     ## Parse output
     # Split on line break
     lines = output.split(os.linesep)
-    #print(lines)
     numDevices = len(lines)-1
     GPUs = []
     for g in range(numDevices):
@@ -139,17 +140,18 @@ def getGPUProcesses():
 
     nvidia_smi = getNvidiaSmiCmd()
     try:
-        p = Popen([nvidia_smi,"--query-compute-apps=pid,process_name,gpu_uuid,gpu_name,used_memory", "--format=csv,noheader,nounits"], stdout=PIPE)
-        stdout, stderror = p.communicate()
+        p = subprocess.run([
+            nvidia_smi,
+            "--query-compute-apps=pid,process_name,gpu_uuid,gpu_name,used_memory",
+            "--format=csv,noheader,nounits"
+        ], stdout=subprocess.PIPE, encoding='utf8')
+        stdout, stderror = p.stdout, p.stderr
     except:
         return []
-    output = stdout.decode('UTF-8')
-    # output = output[2:-1] # Remove b' and ' from string added by python
-    #print(output)
+    output = stdout
     ## Parse output
     # Split on line break
     lines = output.split(os.linesep)
-    #print(lines)
     numProcesses = len(lines) - 1
     processes = []
     for g in range(numProcesses):
