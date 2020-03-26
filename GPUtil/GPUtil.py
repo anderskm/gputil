@@ -30,7 +30,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from subprocess import Popen, PIPE
 from distutils import spawn
 import os
 import math
@@ -38,6 +37,7 @@ import random
 import time
 import sys
 import platform
+import subprocess
 
 
 __version__ = '1.4.0'
@@ -58,6 +58,25 @@ class GPU:
         self.display_active = display_active
         self.temperature = temp_gpu
 
+    def __str__(self):
+        return str(self.__dict__)
+
+
+class GPUProcess:
+    def __init__(self, pid, processName, gpuId, gpuUuid, gpuName, usedMemory,
+                 uid, uname):
+        self.pid = pid
+        self.processName = processName
+        self.gpuId = gpuId
+        self.gpuUuid = gpuUuid
+        self.gpuName = gpuName
+        self.usedMemory = usedMemory
+        self.uid = uid
+        self.uname = uname
+
+    def __str__(self):
+        return str(self.__dict__)
+
 def safeFloatCast(strNumber):
     try:
         number = float(strNumber)
@@ -65,7 +84,7 @@ def safeFloatCast(strNumber):
         number = float('nan')
     return number
 
-def getGPUs():
+def getNvidiaSmiCmd():
     if platform.system() == "Windows":
         # If the platform is Windows and nvidia-smi 
         # could not be found from the environment path, 
@@ -75,20 +94,25 @@ def getGPUs():
             nvidia_smi = "%s\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe" % os.environ['systemdrive']
     else:
         nvidia_smi = "nvidia-smi"
+    return nvidia_smi
 	
+
+def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
+    nvidia_smi = getNvidiaSmiCmd()
     try:
-        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
-        stdout, stderror = p.communicate()
+        p = subprocess.run([
+            nvidia_smi,
+            "--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu",
+            "--format=csv,noheader,nounits"
+        ], stdout=subprocess.PIPE, encoding='utf8')
+        stdout, stderror = p.stdout, p.stderr
     except:
         return []
-    output = stdout.decode('UTF-8')
-    # output = output[2:-1] # Remove b' and ' from string added by python
-    #print(output)
+    output = stdout
     ## Parse output
     # Split on line break
     lines = output.split(os.linesep)
-    #print(lines)
     numDevices = len(lines)-1
     GPUs = []
     for g in range(numDevices):
@@ -96,34 +120,69 @@ def getGPUs():
         #print(line)
         vals = line.split(', ')
         #print(vals)
-        for i in range(12):
-            # print(vals[i])
-            if (i == 0):
-                deviceIds = int(vals[i])
-            elif (i == 1):
-                uuid = vals[i]
-            elif (i == 2):
-                gpuUtil = safeFloatCast(vals[i])/100
-            elif (i == 3):
-                memTotal = safeFloatCast(vals[i])
-            elif (i == 4):
-                memUsed = safeFloatCast(vals[i])
-            elif (i == 5):
-                memFree = safeFloatCast(vals[i])
-            elif (i == 6):
-                driver = vals[i]
-            elif (i == 7):
-                gpu_name = vals[i]
-            elif (i == 8):
-                serial = vals[i]
-            elif (i == 9):
-                display_active = vals[i]
-            elif (i == 10):
-                display_mode = vals[i]
-            elif (i == 11):
-                temp_gpu = safeFloatCast(vals[i]);
+        deviceIds = int(vals[0])
+        uuid = vals[1]
+        gpuUtil = safeFloatCast(vals[2]) / 100
+        memTotal = safeFloatCast(vals[3])
+        memUsed = safeFloatCast(vals[4])
+        memFree = safeFloatCast(vals[5])
+        driver = vals[6]
+        gpu_name = vals[7]
+        serial = vals[8]
+        display_active = vals[9]
+        display_mode = vals[10]
+        temp_gpu = safeFloatCast(vals[11]);
         GPUs.append(GPU(deviceIds, uuid, gpuUtil, memTotal, memUsed, memFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu))
     return GPUs  # (deviceIds, gpuUtil, memUtil)
+
+
+def getGPUProcesses():
+    """Get all gpu compute processes."""
+
+    global gpuUuidToIdMap
+
+    nvidia_smi = getNvidiaSmiCmd()
+    try:
+        p = subprocess.run([
+            nvidia_smi,
+            "--query-compute-apps=pid,process_name,gpu_uuid,gpu_name,used_memory",
+            "--format=csv,noheader,nounits"
+        ], stdout=subprocess.PIPE, encoding='utf8')
+        stdout, stderror = p.stdout, p.stderr
+    except:
+        return []
+    output = stdout
+    ## Parse output
+    # Split on line break
+    lines = output.split(os.linesep)
+    numProcesses = len(lines) - 1
+    processes = []
+    for g in range(numProcesses):
+        line = lines[g]
+        #print(line)
+        vals = line.split(', ')
+        #print(vals)
+        pid = int(vals[0])
+        processName = vals[1]
+        gpuUuid = vals[2]
+        gpuName = vals[3]
+        usedMemory = safeFloatCast(vals[4])
+        gpuId = gpuUuidToIdMap[gpuUuid]
+        if gpuId is None:
+            gpuId = -1
+
+        # get uid and uname owner of the pid
+        try:
+            p = subprocess.run(['ps', f'-p{pid}', '-oruid=,ruser='],
+                               stdout=subprocess.PIPE, encoding='utf8')
+            uid, uname = p.stdout.split()
+            uid = int(uid)
+        except:
+            uid, uname = -1, ''
+
+        processes.append(GPUProcess(pid, processName, gpuId, gpuUuid,
+                                    gpuName, usedMemory, uid, uname))
+    return processes
 
 
 def getAvailable(order = 'first', limit=1, maxLoad=0.5, maxMemory=0.5, memoryFree=0, includeNan=False, excludeID=[], excludeUUID=[]):
@@ -310,3 +369,15 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
             print(headerSpacingString)
             for GPUstring in GPUstrings:
                 print(GPUstring)
+
+
+# Generate gpu uuid to id map
+gpuUuidToIdMap = {}
+try:
+    gpus = getGPUs()
+    for gpu in gpus:
+        gpuUuidToIdMap[gpu.uuid] = gpu.id
+    del gpus
+except:
+    pass
+
