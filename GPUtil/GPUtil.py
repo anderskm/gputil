@@ -79,7 +79,7 @@ def getGPUs():
     # Get ID, processing and memory utilization for all GPUs
     try:
         p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
-        stdout, stderror = p.communicate()
+        stdout, _stderr = p.communicate()
     except:
         return []
     output = stdout.decode('UTF-8')
@@ -121,7 +121,7 @@ def getGPUs():
             elif (i == 10):
                 display_mode = vals[i]
             elif (i == 11):
-                temp_gpu = safeFloatCast(vals[i]);
+                temp_gpu = safeFloatCast(vals[i])
         GPUs.append(GPU(deviceIds, uuid, gpuUtil, memTotal, memUsed, memFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu))
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
@@ -265,7 +265,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         elif (isinstance(attr,int)):
                             attrStr = ('{0:d}').format(attr)
                         elif (isinstance(attr,str)):
-                            attrStr = attr;
+                            attrStr = attr
                         elif  (sys.version_info[0] == 2):
                             if (isinstance(attr,unicode)):
                                 attrStr = attr.encode('ascii','ignore')
@@ -290,7 +290,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         elif (isinstance(attr,int)):
                             attrStr = ('{0:' + minWidthStr + 'd}').format(attr)
                         elif (isinstance(attr,str)):
-                            attrStr = ('{0:' + minWidthStr + 's}').format(attr);
+                            attrStr = ('{0:' + minWidthStr + 's}').format(attr)
                         elif (sys.version_info[0] == 2):
                             if (isinstance(attr,unicode)):
                                 attrStr = ('{0:' + minWidthStr + 's}').format(attr.encode('ascii','ignore'))
