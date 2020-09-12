@@ -43,7 +43,7 @@ import platform
 __version__ = '1.4.0'
 
 class GPU:
-    def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu):
+    def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu, pci_bus):
         self.id = ID
         self.uuid = uuid
         self.load = load
@@ -57,6 +57,7 @@ class GPU:
         self.display_mode = display_mode
         self.display_active = display_active
         self.temperature = temp_gpu
+        self.pci_bus = pci_bus
 
 def safeFloatCast(strNumber):
     try:
@@ -78,8 +79,8 @@ def getGPUs():
 	
     # Get ID, processing and memory utilization for all GPUs
     try:
-        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
-        stdout, stderror = p.communicate()
+        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu,pci.bus", "--format=csv,noheader,nounits"], stdout=PIPE)
+        stdout, _stderr = p.communicate()
     except:
         return []
     output = stdout.decode('UTF-8')
@@ -96,33 +97,20 @@ def getGPUs():
         #print(line)
         vals = line.split(', ')
         #print(vals)
-        for i in range(12):
-            # print(vals[i])
-            if (i == 0):
-                deviceIds = int(vals[i])
-            elif (i == 1):
-                uuid = vals[i]
-            elif (i == 2):
-                gpuUtil = safeFloatCast(vals[i])/100
-            elif (i == 3):
-                memTotal = safeFloatCast(vals[i])
-            elif (i == 4):
-                memUsed = safeFloatCast(vals[i])
-            elif (i == 5):
-                memFree = safeFloatCast(vals[i])
-            elif (i == 6):
-                driver = vals[i]
-            elif (i == 7):
-                gpu_name = vals[i]
-            elif (i == 8):
-                serial = vals[i]
-            elif (i == 9):
-                display_active = vals[i]
-            elif (i == 10):
-                display_mode = vals[i]
-            elif (i == 11):
-                temp_gpu = safeFloatCast(vals[i]);
-        GPUs.append(GPU(deviceIds, uuid, gpuUtil, memTotal, memUsed, memFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu))
+        deviceIds = int(vals[0])
+        uuid = vals[1]
+        gpuUtil = safeFloatCast(vals[2])/100
+        memTotal = safeFloatCast(vals[3])
+        memUsed = safeFloatCast(vals[4])
+        memFree = safeFloatCast(vals[5])
+        driver = vals[6]
+        gpu_name = vals[7]
+        serial = vals[8]
+        display_active = vals[9]
+        display_mode = vals[10]
+        temp_gpu = safeFloatCast(vals[11])
+        pci_bus = int(vals[12], 16)
+        GPUs.append(GPU(deviceIds, uuid, gpuUtil, memTotal, memUsed, memFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu, pci_bus))
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
 
@@ -265,7 +253,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         elif (isinstance(attr,int)):
                             attrStr = ('{0:d}').format(attr)
                         elif (isinstance(attr,str)):
-                            attrStr = attr;
+                            attrStr = attr
                         elif  (sys.version_info[0] == 2):
                             if (isinstance(attr,unicode)):
                                 attrStr = attr.encode('ascii','ignore')
@@ -290,7 +278,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                         elif (isinstance(attr,int)):
                             attrStr = ('{0:' + minWidthStr + 'd}').format(attr)
                         elif (isinstance(attr,str)):
-                            attrStr = ('{0:' + minWidthStr + 's}').format(attr);
+                            attrStr = ('{0:' + minWidthStr + 's}').format(attr)
                         elif (sys.version_info[0] == 2):
                             if (isinstance(attr,unicode)):
                                 attrStr = ('{0:' + minWidthStr + 's}').format(attr.encode('ascii','ignore'))
