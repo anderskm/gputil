@@ -43,7 +43,7 @@ import platform
 __version__ = '1.4.0'
 
 class GPU:
-    def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu):
+    def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu, core_clock, memory_clock, vbios_version, fan_speed, power_draw, power_limit):
         self.id = ID
         self.uuid = uuid
         self.load = load
@@ -52,11 +52,18 @@ class GPU:
         self.memoryUsed = memoryUsed
         self.memoryFree = memoryFree
         self.driver = driver
+        self.vbios_version = vbios_version
         self.name = gpu_name
         self.serial = serial
         self.display_mode = display_mode
         self.display_active = display_active
         self.temperature = temp_gpu
+        self.fan_speed = fan_speed
+        self.power_draw = power_draw
+        self.power_limit = power_limit
+        self.core_clock = core_clock
+        self.memory_clock = memory_clock
+
 
 def safeFloatCast(strNumber):
     try:
@@ -78,7 +85,7 @@ def getGPUs():
 	
     # Get ID, processing and memory utilization for all GPUs
     try:
-        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
+        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu,clocks.current.graphics,clocks.current.memory,vbios_version,fan.speed,power.draw,power.limit", "--format=csv,noheader,nounits"], stdout=PIPE)
         stdout, stderror = p.communicate()
     except:
         return []
@@ -96,7 +103,7 @@ def getGPUs():
         #print(line)
         vals = line.split(', ')
         #print(vals)
-        for i in range(12):
+        for i in range(len(vals)):
             # print(vals[i])
             if (i == 0):
                 deviceIds = int(vals[i])
@@ -121,8 +128,20 @@ def getGPUs():
             elif (i == 10):
                 display_mode = vals[i]
             elif (i == 11):
-                temp_gpu = safeFloatCast(vals[i]);
-        GPUs.append(GPU(deviceIds, uuid, gpuUtil, memTotal, memUsed, memFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu))
+                temp_gpu = safeFloatCast(vals[i])
+            elif (i==12):
+                core_clock = int(vals[i])
+            elif (i==13):
+                memory_clock = int(vals[i])
+            elif (i==14):
+                vbios_version = vals[i]
+            elif (i==15):
+                fan_speed = int(vals[i])
+            elif (i==16):
+                power_draw = safeFloatCast(vals[i])
+            elif (i==17):
+                power_limit = safeFloatCast(vals[i])
+        GPUs.append(GPU(deviceIds, uuid, gpuUtil, memTotal, memUsed, memFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu, core_clock, memory_clock, vbios_version, fan_speed, power_draw, power_limit))
     return GPUs  # (deviceIds, gpuUtil, memUtil)
 
 
@@ -210,10 +229,11 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
     GPUs = getGPUs()
     if (all):
         if (useOldCode):
-            print(' ID | Name | Serial | UUID || GPU util. | Memory util. || Memory total | Memory used | Memory free || Display mode | Display active |')
-            print('------------------------------------------------------------------------------------------------------------------------------')
+            print(' ID | Name | Serial | UUID || GPU util. | Memory util. || Memory total | Memory used | Memory free || Display mode | Display active || Core Clock | Memory Clock || Fan Speed | Power draw ')
+            print('-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------')
             for gpu in GPUs:
-                print(' {0:2d} | {1:s}  | {2:s} | {3:s} || {4:3.0f}% | {5:3.0f}% || {6:.0f}MB | {7:.0f}MB | {8:.0f}MB || {9:s} | {10:s}'.format(gpu.id,gpu.name,gpu.serial,gpu.uuid,gpu.load*100,gpu.memoryUtil*100,gpu.memoryTotal,gpu.memoryUsed,gpu.memoryFree,gpu.display_mode,gpu.display_active))
+                print(' {0:2d} | {1:s}  | {2:s} | {3:s} || {4:3.0f}% | {5:3.0f}% || {6:.0f}MB | {7:.0f}MB | {8:.0f}MB || {9:s} | {10:s} || {11:d}Mhz | {12:d}Mhz || {13:2.0f}% | {14:2.0f}w'
+                      .format(gpu.id,gpu.name,gpu.serial,gpu.uuid,gpu.load*100,gpu.memoryUtil*100,gpu.memoryTotal,gpu.memoryUsed,gpu.memoryFree,gpu.display_mode,gpu.display_active,gpu.core_clock,gpu.memory_clock,gpu.fan_speed,gpu.power_draw))
         else:
             attrList = [[{'attr':'id','name':'ID'},
                          {'attr':'name','name':'Name'},
@@ -226,7 +246,12 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
                          {'attr':'memoryUsed','name':'Memory used','suffix':'MB','precision':0},
                          {'attr':'memoryFree','name':'Memory free','suffix':'MB','precision':0}],
                         [{'attr':'display_mode','name':'Display mode'},
-                         {'attr':'display_active','name':'Display active'}]]
+                         {'attr':'display_active','name':'Display active'}],
+                        [{'attr':'core_clock','name':'Core Clock'},
+                         {'attr':'memory_clock','name':'Memory Clock'}],
+                        [{'attr':'fan_speed','name':'Fan Speed'},
+                         {'attr':'power_draw','name':'Power draw'}]
+                        ]
         
     else:
         if (useOldCode):
@@ -234,8 +259,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
             print('--------------')
             for gpu in GPUs:
                 print(' {0:2d} {1:3.0f}% {2:3.0f}%'.format(gpu.id, gpu.load*100, gpu.memoryUtil*100))
-        elif attrList is None:
-            # if `attrList` was not specified, use the default one
+        else:
             attrList = [[{'attr':'id','name':'ID'},
                          {'attr':'load','name':'GPU','suffix':'%','transform': lambda x: x*100,'precision':0},
                          {'attr':'memoryUtil','name':'MEM','suffix':'%','transform': lambda x: x*100,'precision':0}],
