@@ -170,6 +170,12 @@ Helper class handle the attributes of each GPU. Quoted descriptions are copied f
   * `serial` - This number matches the serial number physically printed on each board. It is a globally unique immutable alphanumeric value.
   * `display_mode` - "A flag that indicates whether a physical display (e.g. monitor) is currently connected to any of the GPU's connectors. "Enabled" indicates an attached display. "Disabled" indicates otherwise."
   * `display_active` - "A flag that indicates whether a display is initialized on the GPU's (e.g. memory is allocated on the device for display). Display can be active even when no monitor is physically attached. "Enabled" indicates an active display. "Disabled" indicates otherwise."
+  * `vbios_version` - "Bios version installed on the GPU."
+  * `fan_speed` - "Current fan speed."
+  * `power_draw` - "Current consumption of the GPU. The value is expressed in Watt."
+  * `power_limit` - "Max power that the GPU can consume."
+  * `core_clock` - "Current core clock."
+  * `memory_clock` - "Current memory clock."
 
 ```python
 GPUs = GPUtil.getGPUs()
