@@ -354,23 +354,23 @@ a+b=42
 If using GPUtil to monitor GPUs during training, it may show 0% utilization. A way around this is to use a separate monitoring thread.
 ```python
 import GPUtil
-from threading import Thread
+from threading import Thread, Event
 import time
 
 class Monitor(Thread):
     def __init__(self, delay):
         super(Monitor, self).__init__()
-        self.stopped = False
+        self.stopped = Event()
         self.delay = delay # Time between calls to GPUtil
         self.start()
 
     def run(self):
-        while not self.stopped:
+        while not self.stopped.is_set():
             GPUtil.showUtilization()
             time.sleep(self.delay)
 
     def stop(self):
-        self.stopped = True
+        self.stopped.set()
         
 # Instantiate monitor with a 10-second delay between updates
 monitor = Monitor(10)
