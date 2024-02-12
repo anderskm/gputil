@@ -30,7 +30,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, check_output
 from distutils import spawn
 import os
 import math
@@ -39,8 +39,8 @@ import time
 import sys
 import platform
 
-
 __version__ = '1.4.0'
+CREATE_NO_WINDOW = 0x08000000
 
 class GPU:
     def __init__(self, ID, uuid, load, memoryTotal, memoryUsed, memoryFree, driver, gpu_name, serial, display_mode, display_active, temp_gpu):
@@ -65,7 +65,7 @@ def safeFloatCast(strNumber):
         number = float('nan')
     return number
 
-def getGPUs():
+def getGPUs(hide_terminal_pop_up=True):
     if platform.system() == "Windows":
         # If the platform is Windows and nvidia-smi 
         # could not be found from the environment path, 
@@ -77,11 +77,22 @@ def getGPUs():
         nvidia_smi = "nvidia-smi"
 	
     # Get ID, processing and memory utilization for all GPUs
-    try:
-        p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
-        stdout, stderror = p.communicate()
-    except:
-        return []
+    if hide_terminal_pop_up:
+        try:
+            stdout = check_output(
+                [
+                    nvidia_smi,
+                    "--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu",
+                    "--format=csv,noheader,nounits"],
+                creationflags=CREATE_NO_WINDOW)
+        except:
+            return []
+    else:
+        try:
+            p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
+            stdout, stderror = p.communicate()
+        except:
+            return []
     output = stdout.decode('UTF-8')
     # output = output[2:-1] # Remove b' and ' from string added by python
     #print(output)
