@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
       name = 'GPUtil',
@@ -10,6 +10,9 @@ setup(
       url = 'https://github.com/anderskm/gputil',
       download_url = 'https://github.com/anderskm/gputil/tarball/v1.4.0',
       keywords = ['gpu','utilization','load','memory','available','usage','free','select','nvidia'],
-      classifiers = [],
+      classifiers = [
+          'License :: OSI Approved :: MIT License',
+      ],
       license = 'MIT',
+      license_files = ['LICENSE.txt'],
 )
