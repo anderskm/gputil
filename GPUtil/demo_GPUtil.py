@@ -10,6 +10,20 @@ print(sys.version)
 # Print package name and version number
 print(GPU.__name__ + ' ' + GPU.__version__)
 
+# Get all GPUs
+gpus = GPU.getGPUs()
+print("All gpus:")
+for gpu in gpus:
+    print(gpu)
+print()
+
+# Get all GPU processes
+gpuProcesses = GPU.getGPUProcesses()
+print("All gpu processes:")
+for gpuProcess in gpuProcesses:
+    print(gpuProcess)
+print()
+
 # Show the utilization of all GPUs in a nice table
 GPU.showUtilization()
 
@@ -60,3 +74,4 @@ print(firstGPU)
 # NOTE: If all your GPUs currently have a memory consumption larger than 1%,
 # this step will fail. It's not a bug! It is intended to do so, if it does not
 # find an available GPU.
+
