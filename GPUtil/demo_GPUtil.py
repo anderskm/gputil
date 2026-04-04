@@ -1,6 +1,6 @@
 import GPUtil as GPU
 import sys
-# Get all device ids and their processing and memory utiliazion
+# Get all device ids and their processing and memory utilization
 # (deviceIds, gpuUtil, memUtil) = GPU.getGPUs()
 
 # Print os and python version information
