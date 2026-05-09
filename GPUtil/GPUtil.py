@@ -31,7 +31,7 @@
 # SOFTWARE.
 
 from subprocess import Popen, PIPE
-import shutil
+from distutils import spawn
 import os
 import math
 import random
@@ -65,12 +65,12 @@ def safeFloatCast(strNumber):
         number = float('nan')
     return number
 
-def getGPUs():
+def getGPUs() -> list[GPU]:
     if platform.system() == "Windows":
         # If the platform is Windows and nvidia-smi 
         # could not be found from the environment path, 
         # try to find it from system drive with default installation path
-        nvidia_smi = shutil.which('nvidia-smi')
+        nvidia_smi = spawn.find_executable('nvidia-smi')
         if nvidia_smi is None:
             nvidia_smi = "%s\\Program Files\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe" % os.environ['systemdrive']
     else:
@@ -80,8 +80,6 @@ def getGPUs():
     try:
         p = Popen([nvidia_smi,"--query-gpu=index,uuid,utilization.gpu,memory.total,memory.used,memory.free,driver_version,name,gpu_serial,display_active,display_mode,temperature.gpu", "--format=csv,noheader,nounits"], stdout=PIPE)
         stdout, stderror = p.communicate()
-        if (p.returncode != 0):
-            return []
     except:
         return []
     output = stdout.decode('UTF-8')
@@ -236,8 +234,7 @@ def showUtilization(all=False, attrList=None, useOldCode=False):
             print('--------------')
             for gpu in GPUs:
                 print(' {0:2d} {1:3.0f}% {2:3.0f}%'.format(gpu.id, gpu.load*100, gpu.memoryUtil*100))
-        elif attrList is None:
-            # if `attrList` was not specified, use the default one
+        else:
             attrList = [[{'attr':'id','name':'ID'},
                          {'attr':'load','name':'GPU','suffix':'%','transform': lambda x: x*100,'precision':0},
                          {'attr':'memoryUtil','name':'MEM','suffix':'%','transform': lambda x: x*100,'precision':0}],
