@@ -89,9 +89,9 @@ def getGPUs():
     #print(output)
     ## Parse output
     # Split on line break
-    lines = output.split(os.linesep)
+    lines = output.splitlines()
     #print(lines)
-    numDevices = len(lines)-1
+    numDevices = len(lines)
     GPUs = []
     for g in range(numDevices):
         line = lines[g]
