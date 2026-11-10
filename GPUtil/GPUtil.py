@@ -187,6 +187,7 @@ def getFirstAvailable(order = 'first', maxLoad=0.5, maxMemory=0.5, attempts=1, i
     #        firstAvailableGPU = GPUs[i].id
     #        break
     #return firstAvailableGPU
+    available = []
     for i in range(attempts):
         if (verbose):
             print('Attempting (' + str(i+1) + '/' + str(attempts) + ') to locate available GPU.')
